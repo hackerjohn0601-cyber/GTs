@@ -76,7 +76,7 @@
   box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
 }
 
-.curriculum-grade-row, .curriculum-units-row {
+.curriculum-grade-row, .curriculum-subject-row, .curriculum-units-row {
   display: flex;
   align-items: center;
   gap: 0.85rem;
@@ -91,10 +91,38 @@
   min-width: 75px;
 }
 
-.grade-pills-wrap, .curr-units-wrap {
+.grade-pills-wrap, .subject-pills-wrap, .curr-units-wrap {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+}
+
+.subject-pill-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: var(--transition-fast);
+}
+
+.subject-pill-btn:hover {
+  border-color: var(--accent-cyan);
+  color: var(--text-main);
+}
+
+.subject-pill-btn.active {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
+  border-color: var(--accent-cyan);
+  color: #38bdf8;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
 }
 
 .grade-pill-btn {
@@ -142,6 +170,17 @@
   box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
 }
 
+.unit-subject-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  letter-spacing: 0.2px;
+}
+
 .unit-code-badge {
   background: rgba(6, 182, 212, 0.2);
   color: var(--accent-cyan);
@@ -153,9 +192,16 @@
 
 .unit-chip-btn.special-combo {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(16, 185, 129, 0.25) 100%);
-  border-color: var(--primary-light);
+  border: 1.5px solid var(--primary-light);
   color: #fff;
   font-weight: 700;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.unit-chip-btn.special-combo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.5);
+  border-color: #a5b4fc;
 }
 
 .edition-tag-pill {

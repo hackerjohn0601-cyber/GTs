@@ -5,6 +5,7 @@ class SearchEngine {
     this.currentCategory = 'all';
     this.selectedEdition = 'kangxuan'; // default 康軒版
     this.selectedGrade = 'g7'; // default 國一
+    this.selectedSubject = 'all'; // default 全部學科
     this.searchResults = [];
     this.activeMaterial = null;
     this.savedNotes = JSON.parse(localStorage.getItem('omnilearn_saved_materials') || '[]');
@@ -105,6 +106,20 @@ class SearchEngine {
           </div>
         </div>
 
+        <div class="curriculum-subject-row">
+          <span class="curr-row-label">選擇科目：</span>
+          <div class="subject-pills-wrap">
+            <button class="subject-pill-btn ${this.selectedSubject === 'all' ? 'active' : ''}" data-subject="all">
+              ✨ 全部學科
+            </button>
+            ${data.subjects.map(s => `
+              <button class="subject-pill-btn ${s.id === this.selectedSubject ? 'active' : ''}" data-subject="${s.id}">
+                ${s.icon} ${s.name}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
         <div class="curriculum-units-row">
           <span class="curr-row-label">單元速查：</span>
           <div class="curr-units-wrap" id="curr-units-buttons-container"></div>
@@ -134,43 +149,351 @@ class SearchEngine {
       });
     });
 
+    // Bind subject buttons
+    container.querySelectorAll('.subject-pill-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('.subject-pill-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.selectedSubject = btn.dataset.subject;
+        window.soundEngine.playClick();
+        this.renderUnitsButtons();
+      });
+    });
+
     this.renderUnitsButtons();
+  }
+
+  // Master Combo Configurations with Explicit Subjects
+  getAllComboConfigs() {
+    return [
+      // Grade 7 (國一)
+      {
+        id: 'g7-bio',
+        gradeId: 'g7',
+        subjectId: 'bio_science',
+        subjectName: '國中生物',
+        subjectIcon: '🔬',
+        label: '⚡ 國一【生物】1-1 到 1-2 生命起源與細胞衝刺包',
+        gradeLabel: '國一 (七年級)',
+        termLabel: '上學期 1-1 到 1-2 單元',
+        paperId: 'paper-g7-bio-ch1',
+        title: '國一生物 1-1 到 1-2 生命起源與細胞構造特訓',
+        keyTakeaways: [
+          {
+            header: '💡 1-1 生命的起源與特性 核心速記',
+            bullets: [
+              '原始大氣：水氣、氨、甲烷、氫氣，<strong>無游離氧氣（O2）</strong>。',
+              '生命四大特徵：生長、生殖、感應、代謝。鐘乳石滴水長大不是生命現象（無細胞構造與代謝）。'
+            ]
+          },
+          {
+            header: '💡 1-2 細胞構造與功能 核心速記',
+            bullets: [
+              '粒線體：動植物皆有，細胞的「能量發電廠」，進行呼吸作用產生 ATP。',
+              '植物細胞特有：細胞壁（纖維素維持形狀）、葉綠體（綠色組織行光合作用）。',
+              '洋蔥表皮細胞無葉綠體，但有細胞壁與細胞核！'
+            ]
+          }
+        ],
+        ttsText: '國一生物 1-1 到 1-2 重點：原始大氣沒有氧氣。生命特徵包含代謝、生長、感應與生殖。植物細胞特有細胞壁與葉綠體，但洋蔥表皮細胞沒有葉綠體！'
+      },
+      {
+        id: 'g7-chinese',
+        gradeId: 'g7',
+        subjectId: 'chinese',
+        subjectName: '國中國文',
+        subjectIcon: '✍️',
+        label: '⚡ 國一【國文】1-1 到 1-2 朱自清《背影》與字體演變衝刺包',
+        gradeLabel: '國一 (七年級)',
+        termLabel: '上學期 1-1 到 1-2 單元',
+        paperId: 'paper-g7-chinese-ch1',
+        title: '國一國文 1-1 到 1-2 經典抒情文與語文常識特訓',
+        keyTakeaways: [
+          {
+            header: '💡 1-1 朱自清《背影》以小見大抒情精讀',
+            bullets: [
+              '主旨：父親穿過鐵道攀爬月台買橘子的蹣跚背影，體現含蓄深沈的父愛。',
+              '色彩對照：以橘子的「朱紅」與父親衣服的「黑、深青」呈現強烈視覺焦點。'
+            ]
+          },
+          {
+            header: '💡 1-2 標點符號規範與字體演進順序',
+            bullets: [
+              '標點符號：破折號（——佔兩格，表示語氣轉折或聲音延長）；夾注號（（ ）補充說明）。',
+              '漢字演進：甲骨文（商代卜辭）→ 金文（周代鐘鼎）→ 小篆（秦李斯統一天下文字）→ 隸書（漢代，古今文字分水嶺）→ 楷書（魏晉鍾繇，現代標準楷體）。'
+            ]
+          }
+        ],
+        ttsText: '國一國文核心重點：朱自清背影以買橘子的蹣跚背影象徵深沉父愛。漢字字體演進順序為甲骨文、金文、小篆、隸書，最後到楷書。'
+      },
+      {
+        id: 'g7-math',
+        gradeId: 'g7',
+        subjectId: 'math',
+        subjectName: '國中數學',
+        subjectIcon: '🔢',
+        label: '⚡ 國一【數學】1-1 到 1-2 負數數線與四則指數律衝刺包',
+        gradeLabel: '國一 (七年級)',
+        termLabel: '上學期 1-1 到 1-2 單元',
+        paperId: 'paper-g7-math-ch1',
+        title: '國一數學 1-1 到 1-2 負數與整數四則運算特訓',
+        keyTakeaways: [
+          {
+            header: '💡 1-1 負數與數線三要素幾何意義',
+            bullets: [
+              '數線三要素：原點（0）、正向（通常向右為正）、單位長（刻度間距）。',
+              '絕對值幾何意義：|a| 代表點 a 與原點 0 的「距離」，恆大於等於 0。'
+            ]
+          },
+          {
+            header: '💡 1-2 整數四則運算與指數律易錯陷阱',
+            bullets: [
+              '乘方陷阱：(-2)^4 = +16（負號在括號內，偶次方為正）；但 -2^4 = -16（先算 2^4 再加負號）。',
+              '指數律：a^m · a^n = a^(m+n)；(a^m)^n = a^(m·n)；a^0 = 1 (a≠0)。'
+            ]
+          }
+        ],
+        ttsText: '國一數學核心重點：數線三要素為原點、正向、單位長。負負得正。括號負二的四次方是正十六，負的二的四次方是負十六。'
+      },
+
+      // Grade 8 (國二)
+      {
+        id: 'g8-phy',
+        gradeId: 'g8',
+        subjectId: 'bio_science',
+        subjectName: '國二理化',
+        subjectIcon: '🔬',
+        label: '⚡ 國二【理化】4-2 到 5-1 透鏡成像與熱量計算衝刺包',
+        gradeLabel: '國二 (八年級)',
+        termLabel: '波動聲音、透鏡成像、熱量計算',
+        paperId: 'paper-g8-phy-optics',
+        title: '國二理化 4-2 到 5-1 光學與熱學考點大衝刺',
+        keyTakeaways: [
+          {
+            header: '💡 4-2 光的折射與透鏡成像 核心速記',
+            bullets: [
+              '凸透鏡成像：物在兩倍焦距外 (p > 2f) 成倒立縮小實像（相機）；物在焦點內成正立放大虛像（放大鏡）。',
+              '視力矯正：近視眼成像在視網膜前，配戴凹透鏡發散矯正；遠視眼配戴凸透鏡。'
+            ]
+          },
+          {
+            header: '💡 5-1 溫度與熱量計算 核心速記',
+            bullets: [
+              '熱量公式：H = m · s · ΔT（質量 × 比熱 × 溫度變化量）。',
+              '熱平衡：不計熱散失時，高溫物體放熱 = 低溫物體吸熱。'
+            ]
+          }
+        ],
+        ttsText: '國二理化考點：凸透鏡物在兩倍焦距外成倒立縮小實像。近視眼成像在視網膜前配戴凹透鏡。熱量公式為質量乘比熱乘溫度變化。'
+      },
+      {
+        id: 'g8-math',
+        gradeId: 'g8',
+        subjectId: 'math',
+        subjectName: '國二數學',
+        subjectIcon: '🔢',
+        label: '⚡ 國二【數學】乘法公式與畢氏定理衝刺包',
+        gradeLabel: '國二 (八年級)',
+        termLabel: '乘法公式與直角三角形幾何',
+        paperId: 'paper-g8-math-pythagoras',
+        title: '國二數學 乘法公式與畢氏定理幾何全模組',
+        keyTakeaways: [
+          {
+            header: '💡 乘法公式三大經典公式',
+            bullets: [
+              '和的平方：(a + b)^2 = a^2 + 2ab + b^2。',
+              '平方差公式：(a + b)(a - b) = a^2 - b^2。'
+            ]
+          },
+          {
+            header: '💡 畢氏定理幾何本質',
+            bullets: [
+              '直角三角形兩股平方和等於斜邊平方：a^2 + b^2 = c^2。',
+              '常用直角三邊長比例：3:4:5、5:12:13、7:24:25、1:1:√2、1:√3:2。'
+            ]
+          }
+        ],
+        ttsText: '國二數學核心重點：平方差公式 a加b 乘 a減b 等於 a平方減b平方。畢氏定理直角兩股平方和等於斜邊平方。'
+      },
+
+      // Grade 9 (國三會考)
+      {
+        id: 'g9-sci',
+        gradeId: 'g9',
+        subjectId: 'bio_science',
+        subjectName: '國三會考自然',
+        subjectIcon: '🔬',
+        label: '⚡ 國三【會考自然】牛頓運動定律與電學總複習包',
+        gradeLabel: '國三 (九年級會考)',
+        termLabel: '牛頓運動定律、電路電功率、板塊地科',
+        paperId: 'paper-g9-cap-science',
+        title: '國三教育會考自然全科衝刺大模組',
+        keyTakeaways: [
+          {
+            header: '💡 力與運動（牛頓定律與 v-t 圖）會考必殺',
+            bullets: [
+              'v-t 圖斜率等於加速度 a；線下面積等於位移 s！',
+              '牛頓第二定律：F_net = m · a；第三定律作用力與反作用力作用在不同物體上，絕不抵消！'
+            ]
+          },
+          {
+            header: '💡 電學與地科 會考關鍵考點',
+            bullets: [
+              '歐姆定律 V = I · R；電功率 P = I · V = I^2 · R。',
+              '台灣位於歐亞板塊與菲律賓海板塊的「聚合型板塊邊界」，造山運動劇烈。'
+            ]
+          }
+        ],
+        ttsText: '國三會考核心重點：v-t 圖斜率為加速度，面積為位移。合力等於質量乘加速度。台灣位於歐亞與菲律賓海板塊聚合型交界。'
+      },
+      {
+        id: 'g9-math',
+        gradeId: 'g9',
+        subjectId: 'math',
+        subjectName: '國三會考數學',
+        subjectIcon: '🔢',
+        label: '⚡ 國三【會考數學】幾何相似形與圓周角衝刺包',
+        gradeLabel: '國三 (九年級會考)',
+        termLabel: '幾何相似形與圓周角定理',
+        paperId: 'paper-g9-cap-math',
+        title: '國三會考數學 幾何相似與圓形考點衝刺',
+        keyTakeaways: [
+          {
+            header: '💡 相似形性質與面積比',
+            bullets: [
+              '若兩三角形相似，對應邊長成比例，對應角相等。',
+              '面積比等於對應邊長比的「平方比」！體積比等於「立方比」！'
+            ]
+          },
+          {
+            header: '💡 圓心角與圓周角關係',
+            bullets: [
+              '圓心角度數等於所對弧的度數。',
+              '圓周角度數等於所對弧度數的「一半」（即圓心角的一半）。'
+            ]
+          }
+        ],
+        ttsText: '國三會考數學核心重點：相似形面積比等於邊長平方比。圓周角度數等於圓心角的一半。'
+      },
+
+      // Senior (高中學測)
+      {
+        id: 'senior-sci',
+        gradeId: 'senior',
+        subjectId: 'bio_science',
+        subjectName: '高中學測自然',
+        subjectIcon: '🔬',
+        label: '⚡ 高中【學測自然】分子生物中心法則與克卜勒跨科衝刺包',
+        gradeLabel: '高中 (學測/分科)',
+        termLabel: '分子生物學、克卜勒天體力學跨科',
+        paperId: 'paper-senior-physics-bio',
+        title: '大學學測自然 跨領域素養考點大衝刺',
+        keyTakeaways: [
+          {
+            header: '💡 分子生物學中心法則與克卜勒定律',
+            bullets: [
+              '中心法則：DNA ──(轉錄)──> mRNA ──(轉譯)──> 蛋白質。三聯體密碼子決定胺基酸。',
+              '克卜勒第二定律：行星連線在等時間掃過等面積，近日點速率最快、遠日點最慢。'
+            ]
+          }
+        ],
+        ttsText: '高中學測自然重點：中心法則為 DNA 轉錄為 mRNA，再轉譯為蛋白質。克卜勒定律近日點速率最快。'
+      },
+      {
+        id: 'senior-math',
+        gradeId: 'senior',
+        subjectId: 'math',
+        subjectName: '高中學測數學',
+        subjectIcon: '🔢',
+        label: '⚡ 高中【學測數學】多項式餘式定理與對數律衝刺包',
+        gradeLabel: '高中 (學測/分科)',
+        termLabel: '多項式餘式定理與對數函數',
+        paperId: 'paper-senior-math-poly',
+        title: '大學學測數學 核心多項式與函數特訓',
+        keyTakeaways: [
+          {
+            header: '💡 高中數學學測核心工具',
+            bullets: [
+              '餘式定理：多項式 f(x) 除以 (x - c) 的餘式為 f(c)。',
+              '對數律：log(ab) = log a + log b；換底公式 log_a b = (log_c b) / (log_c a)。'
+            ]
+          }
+        ],
+        ttsText: '高中學測數學重點：餘式定理除以 x 減 c 餘式等於 f of c。對數相乘等於對數相加。'
+      }
+    ];
+  }
+
+  getComboDefinition(comboKey) {
+    const all = this.getAllComboConfigs();
+    // Direct ID match
+    let found = all.find(c => c.id === comboKey);
+    if (found) return found;
+
+    // Legacy fallback mapping
+    const legacyMap = {
+      'g7': 'g7-bio',
+      'g8': 'g8-phy',
+      'g9': 'g9-sci',
+      'senior': 'senior-sci'
+    };
+    const mappedId = legacyMap[comboKey] || 'g7-bio';
+    return all.find(c => c.id === mappedId) || all[0];
   }
 
   renderUnitsButtons() {
     const container = document.getElementById('curr-units-buttons-container');
     if (!container || !window.CURRICULUM_DATA) return;
 
-    // Filter units by selected grade & edition
+    // Filter units by selected grade, edition & subject
     const units = window.CURRICULUM_DATA.units.filter(u => {
       const matchGrade = u.gradeId === this.selectedGrade;
       const matchEdition = u.editions.includes(this.selectedEdition);
-      return matchGrade && matchEdition;
+      const matchSubject = this.selectedSubject === 'all' || u.subjectId === this.selectedSubject;
+      return matchGrade && matchEdition && matchSubject;
     });
 
-    if (units.length === 0) {
-      container.innerHTML = `<span style="color:var(--text-muted); font-size:0.85rem;">本年級更多版本章節持續擴充建置中，您可透過上方搜尋框直接輸入單元關鍵字！</span>`;
+    // Subject metadata mapping
+    const subjectMetaMap = {
+      'bio_science': { label: '自然/生物', icon: '🔬', color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)' },
+      'chinese': { label: '國文', icon: '✍️', color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)' },
+      'math': { label: '數學', icon: '🔢', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.15)' },
+      'english': { label: '英文', icon: '🌍', color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.15)' }
+    };
+
+    // Filter active combos for this grade & subject
+    const allCombos = this.getAllComboConfigs();
+    const activeCombos = allCombos.filter(c => {
+      const matchGrade = c.gradeId === this.selectedGrade;
+      const matchSubject = this.selectedSubject === 'all' || c.subjectId === this.selectedSubject;
+      return matchGrade && matchSubject;
+    });
+
+    if (units.length === 0 && activeCombos.length === 0) {
+      container.innerHTML = `<span style="color:var(--text-muted); font-size:0.85rem;">此科目或單元正持續擴充建置中，您可透過上方搜尋框直接輸入教材關鍵字！</span>`;
       return;
     }
 
-    const comboConfigs = {
-      'g7': { label: '⚡ 國一 1-1 到 1-2 整合衝刺包', tag: 'g7' },
-      'g8': { label: '⚡ 國二理化光學與熱學衝刺包', tag: 'g8' },
-      'g9': { label: '⚡ 國三會考力學與電學總複習包', tag: 'g9' },
-      'senior': { label: '⚡ 高中學測跨科素養衝刺包', tag: 'senior' }
-    };
-    const currentCombo = comboConfigs[this.selectedGrade] || comboConfigs['g7'];
+    const unitsHtml = units.map(u => {
+      const sm = subjectMetaMap[u.subjectId] || { label: '學科', icon: '📚', color: '#6366f1', bg: 'rgba(99, 102, 241, 0.15)' };
+      return `
+        <button class="unit-chip-btn" data-unit-id="${u.id}" data-quiz-id="${u.quizPaperId || ''}">
+          <span class="unit-subject-badge" style="color: ${sm.color}; background: ${sm.bg}; border: 1px solid ${sm.color}40;">
+            ${sm.icon} ${sm.label}
+          </span>
+          <span class="unit-code-badge">${u.unitCode}</span>
+          <span class="unit-name-text">${u.unitName}</span>
+        </button>
+      `;
+    }).join('');
 
-    container.innerHTML = units.map(u => `
-      <button class="unit-chip-btn" data-unit-id="${u.id}" data-quiz-id="${u.quizPaperId || ''}">
-        <span class="unit-code-badge">${u.unitCode}</span>
-        <span class="unit-name-text">${u.unitName}</span>
+    const combosHtml = activeCombos.map(c => `
+      <button class="unit-chip-btn special-combo" data-unit-combo="${c.id}">
+        ${c.label}
       </button>
-    `).join('') + `
-      <button class="unit-chip-btn special-combo" data-unit-combo="${currentCombo.tag}">
-        ${currentCombo.label}
-      </button>
-    `;
+    `).join('');
+
+    container.innerHTML = combosHtml + unitsHtml;
 
     container.querySelectorAll('.unit-chip-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -190,190 +513,28 @@ class SearchEngine {
     });
   }
 
-  // Activate combo review by Grade
-  activateUnitComboReview(gradeKey) {
+  // Activate combo review with explicit subject and metadata
+  activateUnitComboReview(comboKey) {
     const modal = document.getElementById('material-reader-modal');
     const contentBox = document.getElementById('reader-modal-body');
     if (!modal || !contentBox) return;
 
     const editionName = this.selectedEdition === 'hanlin' ? '翰林版' : (this.selectedEdition === 'nani' ? '南一版' : '康軒版');
+    const combo = this.getComboDefinition(comboKey);
+    if (!combo) return;
 
-    if (gradeKey === 'g8') {
-      contentBox.innerHTML = `
-        <div class="reader-header">
-          <div class="reader-meta-pills">
-            <span class="subject-badge">🎯 ${editionName} 國二理化段考特訓</span>
-            <span class="grade-badge">國二八年級（波動聲音、透鏡成像、熱量）</span>
-          </div>
-          <h2 class="reader-title">${editionName} 國二理化核心考點大衝刺</h2>
-          <div class="reader-action-toolbar">
-            <button id="combo-quiz-btn" class="toolbar-btn primary">
-              📝 立即進行國二理化專屬測驗 ➔
-            </button>
-            <button id="combo-tts-btn" class="toolbar-btn accent">
-              🔊 導師重點語音速記
-            </button>
-          </div>
-        </div>
-        <div class="reader-key-takeaways">
-          <div class="takeaways-header">💡 4-2 光的折射與透鏡成像 核心速記</div>
-          <ul class="takeaways-list">
-            <li><span class="bullet">✔</span> 凸透鏡：物在兩倍焦距外 (p > 2f) 成倒立縮小實像（相機）；物在一到兩倍焦距間成倒立放大實像（投影機）；物在焦點內成正立放大虛像（放大鏡）。</li>
-            <li><span class="bullet">✔</span> 近視眼：成像於視網膜前，配戴「凹透鏡（發散光線）」矯正；遠視配戴凸透鏡。</li>
-          </ul>
-        </div>
-        <div class="reader-key-takeaways" style="margin-top: 1rem; border-color: rgba(6, 182, 212, 0.4);">
-          <div class="takeaways-header" style="color: var(--accent-cyan);">💡 5-1 溫度與熱量計算 核心速記</div>
-          <ul class="takeaways-list">
-            <li><span class="bullet">✔</span> 熱量公式：H = m · s · ΔT（質量 × 比熱 × 溫度變化量）。</li>
-            <li><span class="bullet">✔</span> 熱平衡：高溫物體放熱 = 低溫物體吸熱。水的比熱大（s=1），常作為冷卻劑。</li>
-          </ul>
-        </div>
-      `;
-
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-
-      const quizBtn = document.getElementById('combo-quiz-btn');
-      if (quizBtn) {
-        quizBtn.onclick = () => {
-          this.closeReader();
-          if (window.appRouter && window.examEngine) {
-            window.examEngine.loadPaperById('paper-g8-phy-optics', 'practice');
-            window.appRouter.navigateTo('quiz');
-          }
-        };
-      }
-      const ttsBtn = document.getElementById('combo-tts-btn');
-      if (ttsBtn) {
-        ttsBtn.onclick = () => {
-          window.soundEngine.speakText('國二理化考點：凸透鏡物在兩倍焦距外成倒立縮小實像。近視眼成像在視網膜前，配戴凹透鏡發散矯正。熱量公式為質量乘比熱乘溫度變化。');
-        };
-      }
-      return;
-    }
-
-    if (gradeKey === 'g9') {
-      contentBox.innerHTML = `
-        <div class="reader-header">
-          <div class="reader-meta-pills">
-            <span class="subject-badge">🎯 ${editionName} 國三會考自然 A++ 衝刺</span>
-            <span class="grade-badge">九年級會考（牛頓運動定律、電路電功率、板塊地科）</span>
-          </div>
-          <h2 class="reader-title">${editionName} 國三教育會考自然全科衝刺大模組</h2>
-          <div class="reader-action-toolbar">
-            <button id="combo-quiz-btn" class="toolbar-btn primary">
-              📝 立即進行國三會考自然全真測驗 ➔
-            </button>
-            <button id="combo-tts-btn" class="toolbar-btn accent">
-              🔊 導師重點語音速記
-            </button>
-          </div>
-        </div>
-        <div class="reader-key-takeaways">
-          <div class="takeaways-header">💡 力與運動（牛頓定律與 v-t 圖）會考必殺</div>
-          <ul class="takeaways-list">
-            <li><span class="bullet">✔</span> v-t 圖斜率等於加速度 a；線下與時間軸圍成的面積等於位移 s！</li>
-            <li><span class="bullet">✔</span> 牛頓第二定律：F_net = m · a；第三定律：作用力與反作用力作用在不同物體上，絕不可抵消！</li>
-          </ul>
-        </div>
-        <div class="reader-key-takeaways" style="margin-top: 1rem; border-color: rgba(6, 182, 212, 0.4);">
-          <div class="takeaways-header" style="color: var(--accent-cyan);">💡 電學與地科 會考關鍵考點</div>
-          <ul class="takeaways-list">
-            <li><span class="bullet">✔</span> 歐姆定律 V = I · R；電功率 P = I · V = I^2 · R；1 度電 = 1000 瓦 × 1 小時。</li>
-            <li><span class="bullet">✔</span> 台灣位於菲律賓海板塊與歐亞板塊的「聚合型板塊交界」，持續擠壓碰撞造成造山運動與地震。</li>
-          </ul>
-        </div>
-      `;
-
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-
-      const quizBtn = document.getElementById('combo-quiz-btn');
-      if (quizBtn) {
-        quizBtn.onclick = () => {
-          this.closeReader();
-          if (window.appRouter && window.examEngine) {
-            window.examEngine.loadPaperById('paper-g9-cap-science', 'practice');
-            window.appRouter.navigateTo('quiz');
-          }
-        };
-      }
-      const ttsBtn = document.getElementById('combo-tts-btn');
-      if (ttsBtn) {
-        ttsBtn.onclick = () => {
-          window.soundEngine.speakText('國三會考核心重點：v-t 圖斜率為加速度，面積為位移。牛頓第二定律合力等於質量乘加速度。台灣位於歐亞與菲律賓海板塊聚合型交界。');
-        };
-      }
-      return;
-    }
-
-    if (gradeKey === 'senior') {
-      contentBox.innerHTML = `
-        <div class="reader-header">
-          <div class="reader-meta-pills">
-            <span class="subject-badge">🎯 高中學測跨領域素養特訓</span>
-            <span class="grade-badge">高一至高三（分子生物學、克卜勒天體力學、多項式）</span>
-          </div>
-          <h2 class="reader-title">大學學測自然與數學核心考點全精華</h2>
-          <div class="reader-action-toolbar">
-            <button id="combo-quiz-btn" class="toolbar-btn primary">
-              📝 立即進行高中學測自然素養卷 ➔
-            </button>
-            <button id="combo-tts-btn" class="toolbar-btn accent">
-              🔊 導師重點語音速記
-            </button>
-          </div>
-        </div>
-        <div class="reader-key-takeaways">
-          <div class="takeaways-header">💡 分子生物學中心法則與克卜勒定律</div>
-          <ul class="takeaways-list">
-            <li><span class="bullet">✔</span> 中心法則：DNA ──(轉錄)──> mRNA ──(轉譯)──> 蛋白質。三聯體密碼子決定胺基酸。</li>
-            <li><span class="bullet">✔</span> 克卜勒第二定律：近日點距離小速率最大、遠日點距離大速率最小。第三定律：T^2 / R^3 = 常數。</li>
-          </ul>
-        </div>
-        <div class="reader-key-takeaways" style="margin-top: 1rem; border-color: rgba(6, 182, 212, 0.4);">
-          <div class="takeaways-header" style="color: var(--accent-cyan);">💡 高中數學學測核心工具</div>
-          <ul class="takeaways-list">
-            <li><span class="bullet">✔</span> 餘式定理：多項式 f(x) 除以 (x - c) 的餘式為 f(c)。</li>
-            <li><span class="bullet">✔</span> 對數律：log(ab) = log a + log b；換底公式 log_a b = (log_c b) / (log_c a)。</li>
-          </ul>
-        </div>
-      `;
-
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-
-      const quizBtn = document.getElementById('combo-quiz-btn');
-      if (quizBtn) {
-        quizBtn.onclick = () => {
-          this.closeReader();
-          if (window.appRouter && window.examEngine) {
-            window.examEngine.loadPaperById('paper-senior-physics-bio', 'practice');
-            window.appRouter.navigateTo('quiz');
-          }
-        };
-      }
-      const ttsBtn = document.getElementById('combo-tts-btn');
-      if (ttsBtn) {
-        ttsBtn.onclick = () => {
-          window.soundEngine.speakText('高中學測考點：中心法則為 DNA 轉錄為信使 RNA，再轉譯為蛋白質。克卜勒第二定律近日點速率最快。餘式定理除以 x 減 c 餘式等於 f of c。');
-        };
-      }
-      return;
-    }
-
-    // Default Grade 7 (國一)
     contentBox.innerHTML = `
       <div class="reader-header">
         <div class="reader-meta-pills">
-          <span class="subject-badge">🎯 ${editionName} 國一第一次段考特訓</span>
-          <span class="grade-badge">國一上學期 1-1 到 1-2 單元</span>
+          <span class="subject-badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981;">
+            ${combo.subjectIcon} ${editionName} ${combo.subjectName} 段考特訓
+          </span>
+          <span class="grade-badge">${combo.gradeLabel} · ${combo.termLabel}</span>
         </div>
-        <h2 class="reader-title">${editionName} 國一 1-1 到 1-2 段考高頻考點大彙整</h2>
+        <h2 class="reader-title">${editionName}：${combo.title}</h2>
         <div class="reader-action-toolbar">
           <button id="combo-quiz-btn" class="toolbar-btn primary">
-            📝 立即進行 1-1 到 1-2 專屬測驗 (絕無跨科干擾題)
+            📝 立即進行 ${combo.subjectName} 專屬測驗 (絕無跨科干擾) ➔
           </button>
           <button id="combo-tts-btn" class="toolbar-btn accent">
             🔊 導師重點語音速記
@@ -381,43 +542,34 @@ class SearchEngine {
         </div>
       </div>
 
-      <div class="reader-key-takeaways">
-        <div class="takeaways-header">💡 1-1 生命的起源與特性 核心速記</div>
-        <ul class="takeaways-list">
-          <li><span class="bullet">✔</span> 原始大氣：水氣、氨、甲烷、氫氣，<strong>無氧氣（O2）</strong>。</li>
-          <li><span class="bullet">✔</span> 生命四大特徵：生長、生殖、感應、代謝。鐘乳石長大不是生命現象。</li>
-        </ul>
-      </div>
-
-      <div class="reader-key-takeaways" style="margin-top: 1rem; border-color: rgba(6, 182, 212, 0.4);">
-        <div class="takeaways-header" style="color: var(--accent-cyan);">💡 1-2 細胞構造與功能 核心速記</div>
-        <ul class="takeaways-list">
-          <li><span class="bullet">✔</span> 粒線體：動植物皆有，呼吸作用能量發電廠（ATP）。</li>
-          <li><span class="bullet">✔</span> 植物細胞特有：細胞壁（纖維素保護）、葉綠體（綠色組織光合作用）。</li>
-          <li><span class="bullet">✔</span> 洋蔥表皮細胞無葉綠體，但有細胞壁與細胞核！</li>
-        </ul>
-      </div>
+      ${combo.keyTakeaways.map(sec => `
+        <div class="reader-key-takeaways" style="margin-top: 1rem; border-color: rgba(6, 182, 212, 0.4);">
+          <div class="takeaways-header" style="color: var(--accent-cyan);">${sec.header}</div>
+          <ul class="takeaways-list">
+            ${sec.bullets.map(b => `<li><span class="bullet">✔</span> ${b}</li>`).join('')}
+          </ul>
+        </div>
+      `).join('')}
     `;
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 
     const quizBtn = document.getElementById('combo-quiz-btn');
-    if (quizBtn) {
+    if (quizBtn && combo.paperId) {
       quizBtn.onclick = () => {
         this.closeReader();
         if (window.appRouter && window.examEngine) {
-          window.examEngine.loadPaperById('paper-g7-bio-ch1', 'practice');
+          window.examEngine.loadPaperById(combo.paperId, 'practice');
           window.appRouter.navigateTo('quiz');
         }
       };
     }
 
     const ttsBtn = document.getElementById('combo-tts-btn');
-    if (ttsBtn) {
+    if (ttsBtn && combo.ttsText) {
       ttsBtn.onclick = () => {
-        const text = `國一 1-1 到 1-2 核心重點：第一，原始大氣沒有氧氣。第二，生命特徵包含生長、生殖、感應、代謝。第三，植物細胞特有細胞壁與葉綠體，但洋蔥表皮細胞沒有葉綠體！`;
-        window.soundEngine.speakText(text);
+        window.soundEngine.speakText(combo.ttsText);
       };
     }
   }
@@ -440,17 +592,27 @@ class SearchEngine {
     };
     const gradeLabel = gradeBadgeMap[unit.gradeId || this.selectedGrade] || '全年級通用';
 
+    const subjectMetaMap = {
+      'bio_science': { label: '自然/生物', icon: '🔬', color: '#10b981' },
+      'chinese': { label: '國文', icon: '✍️', color: '#ec4899' },
+      'math': { label: '數學', icon: '🔢', color: '#3b82f6' },
+      'english': { label: '英文', icon: '🌍', color: '#8b5cf6' }
+    };
+    const sMeta = subjectMetaMap[unit.subjectId] || { label: '學科專項', icon: '📚', color: '#6366f1' };
+
     contentBox.innerHTML = `
       <div class="reader-header">
         <div class="reader-meta-pills">
-          <span class="subject-badge">📚 ${editionName} ${unit.unitCode}</span>
+          <span class="subject-badge" style="background: ${sMeta.color}22; border-color: ${sMeta.color}; color: ${sMeta.color};">
+            ${sMeta.icon} ${sMeta.label} · ${editionName} ${unit.unitCode}
+          </span>
           <span class="grade-badge">${gradeLabel} · ${unit.term || '精選單元'}</span>
         </div>
-        <h2 class="reader-title">${editionName}：${unit.unitName}</h2>
+        <h2 class="reader-title">${editionName}【${sMeta.label}】：${unit.unitName}</h2>
         <div class="reader-action-toolbar">
           ${unit.quizPaperId ? `
             <button id="curr-unit-quiz-btn" class="toolbar-btn primary">
-              📝 立即測驗此單元 (${unit.unitCode} 專項)
+              📝 立即測驗此單元 (${sMeta.label} ${unit.unitCode} 專項)
             </button>
           ` : ''}
           <button id="curr-unit-tts-btn" class="toolbar-btn accent">
@@ -489,7 +651,7 @@ class SearchEngine {
     const ttsBtn = document.getElementById('curr-unit-tts-btn');
     if (ttsBtn) {
       ttsBtn.addEventListener('click', () => {
-        const text = `${unit.unitName}。核心考點：${unit.keyPoints.join('。')}`;
+        const text = `【${sMeta.label}】${unit.unitName}。核心考點：${unit.keyPoints.join('。')}`;
         window.soundEngine.speakText(text);
       });
     }
