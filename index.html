@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTs (Go to Study) ｜ 全能教材導航 × 課綱版本精準複習 × 智慧考場系統</title>
+  <meta name="description" content="GTs (Go to Study) 專為學生打造的智慧學習機：支援康軒、翰林、南一課綱版本單元精準複習，全網開源教材即時檢索、四步引導式寫作導師與大考級自適應隨堂考場系統。">
+  <link rel="icon" href="assets/logo.png" type="image/png">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/index.css?v=2">
+  <link rel="stylesheet" href="css/search.css?v=2">
+  <link rel="stylesheet" href="css/writing.css?v=2">
+  <link rel="stylesheet" href="css/quiz.css?v=2">
+</head>
+<body>
+
+  <!-- App Header & Navigation -->
+  <header class="app-header" id="app-header">
+    <div class="header-inner">
+      <div class="brand-area" id="brand-logo-btn" onclick="window.appRouter.navigateTo('materials')">
+        <img src="assets/logo.png" alt="GTs Logo" class="brand-logo-img">
+        <div class="brand-text-col">
+          <h1>GTs</h1>
+          <span class="brand-tagline">課綱版本單元導航 ✕ 寫作思維教練 ✕ 考題專項攻堅</span>
+        </div>
+      </div>
+
+      <nav class="main-nav" aria-label="主要功能選單">
+        <button class="main-nav-item active" data-route="materials" id="nav-btn-materials">
+          <span>📚</span> 探索教材
+        </button>
+        <button class="main-nav-item" data-route="writing" id="nav-btn-writing">
+          <span>✍️</span> 寫作導師
+        </button>
+        <button class="main-nav-item" data-route="quiz" id="nav-btn-quiz">
+          <span>📝</span> 考場測驗
+        </button>
+        <button class="main-nav-item" data-route="stats" id="nav-btn-stats">
+          <span>📊</span> 學習戰情
+        </button>
+      </nav>
+
+      <div class="header-right-tools">
+        <button class="tool-icon-btn" id="sound-toggle-btn" title="切換系統音效">🔊</button>
+        <button class="tool-icon-btn" id="theme-toggle-btn" title="切換深色/淺色主題">☀️</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container" id="main-content">
+
+    <!-- Global Hero Banner -->
+    <section class="hero-banner" id="global-hero-banner">
+      <div class="hero-glow-sphere"></div>
+      <div class="hero-content-col">
+        <div class="hero-badge-pill">
+          <span>✦</span> GTs (GO TO STUDY) 3.0
+        </div>
+        <h2 class="hero-title">
+          GTs：精準對齊課綱版本單元，<br>
+          <span class="hero-gradient-text">康軒/翰林/南一無縫複習，考題精準攻堅！</span>
+        </h2>
+        <p class="hero-description">
+          支援國中 1-1 到 1-2 及各學期段考單元、全網即時開源教材檢索，透過四步導師法掌握記敘與思辨寫作，並以無跨科干擾的精準題庫自我檢測！
+        </p>
+        <div class="hero-cta-group">
+          <button class="hero-cta-btn primary" id="hero-quick-search-btn">
+            <span>📚 課綱版本單元速查</span>
+          </button>
+          <button class="hero-cta-btn secondary" id="hero-quick-write-btn">
+            <span>✍️ 寫作思維特訓</span>
+          </button>
+          <button class="hero-cta-btn secondary" id="hero-quick-quiz-btn">
+            <span>📝 專項隨堂測驗</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-visual-col">
+        <div class="duo-qbi-stage">
+          <!-- Duolingo-style Flat Speech Bubble -->
+          <div class="duo-speech-bubble" id="duo-speech-bubble">
+            <div class="duo-bubble-header">
+              <span class="duo-bubble-name">🐾 伴學夥伴 Q比 (Q-Bi)</span>
+              <span class="duo-bubble-badge">🔥 連勝打卡 3 天</span>
+            </div>
+            <p id="duo-speech-text">嗨！我是 Q比！今天想挑戰什麼科目呢？點擊我可以換心情喔！</p>
+            <div class="duo-bubble-beak"></div>
+          </div>
+
+          <!-- Q比 Mascot Display with Interactive Animation -->
+          <div class="duo-mascot-wrap jumping" id="duo-mascot-wrap" title="點擊 Q比 跟我說說話！">
+            <div class="duo-mascot-fx" id="duo-mascot-fx">
+              <span class="fx-item f1">🎉</span>
+              <span class="fx-item f2">🌟</span>
+              <span class="fx-item f3">✨</span>
+            </div>
+            <img src="assets/qbi/qbi_jump_anim.webp" alt="伴學吉祥物 Q比" class="duo-mascot-img" id="duo-mascot-img">
+            <div class="duo-mascot-shadow"></div>
+          </div>
+
+          <!-- Duolingo-style 5 Action States Switcher -->
+          <div class="duo-pose-selector" id="duo-pose-selector">
+            <button class="duo-pose-btn active" data-pose="jump" title="跳躍慶祝・🎉 陽光慶典音樂環境">🎉 跳躍</button>
+            <button class="duo-pose-btn" data-pose="walk" title="歡樂走路動畫・🚶 林間步道音樂環境">🚶 走路</button>
+            <button class="duo-pose-btn" data-pose="sit" title="專注伴讀・☕ 雨聲 Lo-Fi 音樂環境">📖 伴讀</button>
+            <button class="duo-pose-btn" data-pose="think" title="深度思考・🌌 靈感星空頌缽音樂環境">💡 思考</button>
+            <button class="duo-pose-btn" data-pose="sleep" title="小憩充電・🌙 搖籃夜曲微風音樂環境">💤 休息</button>
+          </div>
+
+          <!-- Q比 角色專屬音樂環境控制條 (Character Musical Environment Bar) -->
+          <div class="duo-music-env-bar" id="duo-music-env-bar">
+            <div class="env-info-group">
+              <div class="env-equalizer-bars" id="env-equalizer-anim">
+                <span class="eq-bar eq-1"></span>
+                <span class="eq-bar eq-2"></span>
+                <span class="eq-bar eq-3"></span>
+                <span class="eq-bar eq-4"></span>
+              </div>
+              <div class="env-text-desc">
+                <span class="env-label">🎧 角色音樂環境</span>
+                <span class="env-mood-pill" id="duo-env-mood-pill" title="歡騰大調音階・激發學習鬥志與動能">🎉 陽光慶典・活力節奏</span>
+              </div>
+            </div>
+            <div class="env-controls-group">
+              <button class="env-music-toggle-btn" id="duo-env-music-toggle" title="開啟/關閉當前角色風格的背景音樂環境">
+                <span id="env-toggle-icon">▶</span> <span id="env-toggle-text">播放氛圍音樂</span>
+              </button>
+              <div class="env-vol-wrapper" title="氛圍音樂音量">
+                <span class="env-vol-icon">🔉</span>
+                <input type="range" id="duo-env-volume-slider" min="0" max="1" step="0.05" value="0.45" class="env-vol-slider">
+              </div>
+            </div>
+          </div>
+
+          <!-- Duolingo-style Gamified Status Pills -->
+          <div class="duo-gamify-bar">
+            <div class="duo-pill streak"><span class="duo-icon">🔥</span> 連續學習 <strong>3 天</strong></div>
+            <div class="duo-pill energy"><span class="duo-icon">⚡</span> 伴學能量 <strong>100%</strong></div>
+            <div class="duo-pill gem"><span class="duo-icon">💎</span> 知識結晶 <strong>120</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: 📚 探索教材 (Web Search & Curated Textbooks) -->
+    <section class="app-main-section active" id="section-materials">
+      <!-- Taiwan Curriculum Editions & Grade Navigator -->
+      <div id="curriculum-quick-navigator"></div>
+
+      <div class="search-hero-box">
+        <div class="search-input-wrapper">
+          <span class="search-lead-icon">🔍</span>
+          <input type="text" id="search-materials-input" class="search-main-input" placeholder="在全網搜尋教材或知識點（例如：記敘文寫作、議論文駁論、光合作用、牛頓定律、微積分...）">
+          <button id="search-materials-btn" class="search-action-btn">
+            <span>全網即時檢索</span> ➔
+          </button>
+        </div>
+
+        <div class="popular-chips-row">
+          <span class="chips-label">🔥 熱門推薦搜尋：</span>
+          <div class="popular-chips-wrap" id="popular-search-tags"></div>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="category-filter-bar">
+        <button class="cat-filter-btn active" data-category="all">✨ 全部學科</button>
+        <button class="cat-filter-btn" data-category="writing">✍️ 國文寫作</button>
+        <button class="cat-filter-btn" data-category="english">🌍 英文寫作</button>
+        <button class="cat-filter-btn" data-category="science">🔬 自然科學</button>
+        <button class="cat-filter-btn" data-category="math">🔢 數學邏輯</button>
+        <button class="cat-filter-btn" data-category="humanities">💡 人文與思辨</button>
+      </div>
+
+      <!-- Curated Materials Header -->
+      <div class="section-header-row">
+        <div class="section-title-wrap">
+          <h3 id="results-count-badge">精選深度教材庫</h3>
+          <p class="section-subtitle">由資深名師教研團隊提煉之章節核心考點、心智圖與範例拆解</p>
+        </div>
+      </div>
+
+      <!-- Curated Materials Cards Grid -->
+      <div class="materials-cards-grid" id="curated-materials-grid"></div>
+
+      <!-- Live Web Search Results -->
+      <div class="live-web-section" id="live-web-results-container">
+        <div class="section-header-row">
+          <div class="section-title-wrap">
+            <h3>🌐 全網即時檢索開源教材</h3>
+            <p class="section-subtitle">同步檢索維基百科、開放式教育資源（OER）與權威學術百科知識庫</p>
+          </div>
+        </div>
+        <div class="live-web-status-bar" id="live-web-status"></div>
+        <div class="web-results-grid" id="live-web-grid"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: ✍️ 寫作導師 (Interactive Writing Coach) -->
+    <section class="app-main-section" id="section-writing">
+      <!-- Workflow Header & Prompt Selector -->
+      <div class="writing-workflow-header">
+        <div class="writing-prompt-bar">
+          <label for="writing-prompt-selector" style="font-weight: 700; white-space: nowrap;">🎯 演練題目：</label>
+          <select id="writing-prompt-selector" class="prompt-select-dropdown"></select>
+          <button id="custom-prompt-btn" class="custom-prompt-btn">＋ 自訂題目</button>
+        </div>
+
+        <div class="writing-steps-nav">
+          <button class="writing-step-tab active" data-step="1" id="tab-step-1">
+            <span>1</span> 審題與破題
+          </button>
+          <button class="writing-step-tab" data-step="2" id="tab-step-2">
+            <span>2</span> 結構大綱
+          </button>
+          <button class="writing-step-tab" data-step="3" id="tab-step-3">
+            <span>3</span> 詞彙修辭
+          </button>
+          <button class="writing-step-tab" data-step="4" id="tab-step-4">
+            <span>4</span> 寫作與評閱
+          </button>
+        </div>
+      </div>
+
+      <!-- Q比 寫作思維小教練 Banner (Duolingo Style) -->
+      <div class="duo-writing-coach-banner" id="qbi-writing-coach-banner">
+        <div class="coach-avatar-box">
+          <img src="assets/qbi/qbi_think_anim.webp" alt="Q比 寫作教練" class="coach-avatar-img" id="qbi-coach-img">
+        </div>
+        <div class="coach-bubble-box">
+          <div class="coach-bubble-tag">🐾 Q比 寫作思維教練指引：</div>
+          <p id="qbi-coach-text">好文章是有靈魂的！跟著 Q比 的 4 步引導法：先審題立意、搭起大綱骨架、點綴詞彙修辭，你也能寫出大考 6 級分佳作！</p>
+        </div>
+      </div>
+
+      <!-- Step 1: 審題與立意 -->
+      <div class="writing-step-panel active" data-step="1" id="panel-step-1">
+        <div class="prompt-hero-card">
+          <div class="prompt-top-row">
+            <span class="prompt-genre-tag" id="prompt-genre-badge">記敘抒情文</span>
+          </div>
+          <h2 class="prompt-title-large" id="prompt-hero-title">那一件承載歲月的物件</h2>
+          <div class="prompt-description-box" id="prompt-desc-text"></div>
+          <div class="prompt-focus-banner" id="prompt-theme-focus"></div>
+
+          <div class="prompt-pitfalls-box">
+            <div class="pitfalls-title">⚠️ 導師避坑指引（審題常見地雷）：</div>
+            <ul class="pitfalls-list" id="prompt-pitfalls-list"></ul>
+          </div>
+
+          <div class="brainstorm-angles-wrapper">
+            <h3>💡 導師推薦高分立意角度（點擊採用）：</h3>
+            <div class="angles-grid" id="prompt-angles-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: 結構大綱搭設 -->
+      <div class="writing-step-panel" data-step="2" id="panel-step-2">
+        <div id="outline-builder-container"></div>
+        <div class="outline-actions-row">
+          <button class="apply-outline-btn" id="apply-outline-to-draft-btn">
+            ✨ 一鍵將大綱架構套用至寫作草稿 ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: 詞彙修辭靈感庫 -->
+      <div class="writing-step-panel" data-step="3" id="panel-step-3">
+        <div class="section-header-row">
+          <div class="section-title-wrap">
+            <h3>💎 點石成金：修辭與高分詞彙靈感庫</h3>
+            <p class="section-subtitle">點擊「＋ 插入至寫作草稿」可直接將優美字句注入您的文章中</p>
+          </div>
+        </div>
+        <div class="rhetoric-palette-grid" id="rhetoric-palette-grid"></div>
+      </div>
+
+      <!-- Step 4: 實戰寫作與 AI 評閱 -->
+      <div class="writing-step-panel" data-step="4" id="panel-step-4">
+        <div class="writing-studio-box">
+          <div class="studio-toolbar">
+            <div class="studio-metrics">
+              <span class="metric-pill">📝 <strong id="metric-char-count">0 字</strong></span>
+              <span class="metric-pill">📑 <strong id="metric-para-count">0 段落</strong></span>
+              <span class="metric-pill">⏱️ <strong id="metric-est-time">約需 0 分鐘朗讀</strong></span>
+            </div>
+            <div class="studio-quick-tools">
+              <button class="studio-tool-btn" id="tts-essay-btn">🔊 朗讀我的作文</button>
+              <button class="studio-tool-btn" id="view-model-essay-btn">🏆 滿分範文觀摩</button>
+            </div>
+          </div>
+
+          <div class="editor-textarea-wrapper">
+            <textarea id="essay-textarea" class="essay-editor" placeholder="在此盡情揮灑筆墨... 可以直接開始撰寫，或透過上方步驟一鍵載入大綱骨架與修辭金句！"></textarea>
+          </div>
+
+          <div class="studio-bottom-actions">
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">
+              💡 提示：撰寫滿 50 字以上即可點擊送交 AI 導師進行多維規準評分與點石成金潤色！
+            </span>
+            <button class="eval-submit-btn" id="evaluate-essay-btn">
+              <span>✨ 送交 AI 深度批改與評分</span> ➔
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: 📝 考場測驗 (Adaptive Exam Simulator) -->
+    <section class="app-main-section" id="section-quiz">
+      <div class="exam-view-subnav">
+        <button class="exam-view-tab active" data-view="catalog">
+          <span>📚</span> 模擬考卷庫
+        </button>
+        <button class="exam-view-tab" data-view="session">
+          <span>✍️</span> 正在進行測驗
+        </button>
+        <button class="exam-view-tab" data-view="report">
+          <span>📊</span> 考後成績戰報
+        </button>
+        <button class="exam-view-tab" data-view="mistakes">
+          <span>📕</span> 我的錯題本 (<span id="mistakes-count-badge">0</span>)
+        </button>
+        <button class="custom-prompt-btn" id="open-custom-quiz-modal" style="margin-left: auto;">
+          🎲 AI 智慧自訂組卷器
+        </button>
+      </div>
+
+      <!-- Subview 1: Catalog -->
+      <div id="exam-catalog-view">
+        <div class="section-header-row">
+          <div class="section-title-wrap">
+            <h3>🎯 官方全科模擬測驗卷</h3>
+            <p class="section-subtitle">支持正式計時模考與邊做邊看詳解兩種練習模式（點擊任意試卷卡片即可開始答題）</p>
+          </div>
+        </div>
+
+        <!-- Grade Filter Bar -->
+        <div class="catalog-grade-filters" id="catalog-grade-filters"></div>
+
+        <div class="exam-papers-grid" id="exam-papers-catalog-grid"></div>
+      </div>
+
+      <!-- Subview 2: Active Exam Session -->
+      <div id="exam-session-view" style="display: none;">
+        <div class="exam-session-container">
+          <!-- HUD Bar -->
+          <div class="exam-hud-bar">
+            <div class="hud-left">
+              <button class="hud-btn reroll-btn" id="exam-reroll-btn" title="重新抽取題目並換一份全新考卷">🎲 重出一份新考卷</button>
+              <div class="hud-qbi-pill" id="hud-qbi-tutor-trigger" onclick="if(window.aiTutor) window.aiTutor.openForCurrentExamQuestion();" title="點我讓 Q比 直接為你講解本題提示與解析！" style="cursor: pointer;">
+                <img src="assets/qbi/qbi_walk.webp" alt="Q比 伴考" class="hud-qbi-img">
+                <span class="hud-qbi-text">💡 點我問 Q比 本題提示</span>
+              </div>
+              <span id="exam-session-mode-badge" class="exam-mode-badge strict">🎯 正式模考模式</span>
+              <strong id="exam-session-title">模擬試卷進行中</strong>
+            </div>
+
+            <div class="hud-timer-box" id="exam-countdown-timer">
+              15:00
+            </div>
+
+            <div class="hud-right-actions">
+              <button class="hud-btn" id="exam-flag-btn">☆ 標記複查</button>
+              <button class="hud-btn" id="toggle-jump-sheet-btn">📋 答題卡</button>
+            </div>
+          </div>
+
+          <!-- Progress Track -->
+          <div class="exam-progress-track">
+            <div class="exam-progress-fill" id="exam-q-progress-bar" style="width: 10%;"></div>
+          </div>
+
+          <!-- Jump Sheet Drawer -->
+          <div class="jump-sheet-drawer" id="exam-jump-sheet">
+            <div class="jump-sheet-legend">
+              <span class="legend-item"><span style="color:var(--text-secondary)">●</span> 未作答</span>
+              <span class="legend-item"><span style="color:var(--primary)">●</span> 已作答</span>
+              <span class="legend-item"><span style="color:var(--accent-amber)">★</span> 已標記</span>
+            </div>
+            <div class="jump-grid" id="exam-jump-sheet-grid"></div>
+          </div>
+
+          <!-- Question Body -->
+          <div class="question-body-wrap">
+            <div class="q-status-row">
+              <span class="current-q-pill" id="current-q-number">第 1 題 / 共 5 題</span>
+            </div>
+
+            <div class="q-text-large" id="exam-question-text">
+              題目正在載入中...
+            </div>
+
+            <div class="options-grid" id="exam-options-container"></div>
+
+            <div class="practice-explanation-card" id="practice-instant-explanation"></div>
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="exam-session-footer">
+            <button class="nav-exam-btn" id="exam-prev-btn">← 上一題</button>
+            <button class="nav-exam-btn submit" id="submit-exam-btn">🏁 結束作答交卷</button>
+            <button class="nav-exam-btn" id="exam-next-btn">下一題 →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subview 3: Score Report -->
+      <div id="exam-report-view" style="display: none;">
+        <div class="score-report-banner">
+          <!-- Duolingo-style Q比 Reaction Mascot -->
+          <div class="duo-report-qbi-box" id="report-qbi-box">
+            <img src="assets/qbi/qbi_jump.png" alt="Q比 成果回饋" class="duo-report-qbi-img" id="report-qbi-img">
+            <div class="duo-report-qbi-speech" id="report-qbi-verdict-bubble">
+              🎉 太棒了！Q比 為你慶祝！大考實力滿分！
+            </div>
+          </div>
+
+          <div class="report-score-display">
+            <span class="report-score-num" id="report-score-number">100</span>
+          </div>
+          <h2 class="report-verdict-text" id="report-verdict-text">成績結算中</h2>
+          <p id="report-accuracy-rate" style="font-size: 1.1rem; color: var(--accent-emerald); font-weight: 700;"></p>
+          <div class="report-metrics-row">
+            <span id="report-time-used">作答用時：-- 分 -- 秒</span>
+          </div>
+
+          <!-- Direct Action Buttons in Banner -->
+          <div class="report-actions-row" id="report-banner-actions">
+            <button id="report-reroll-btn" class="hero-cta-btn primary" style="background: linear-gradient(135deg, #6366f1, #a855f7); padding: 0.75rem 1.4rem; font-size: 0.95rem;">
+              🎲 重出一份新考卷（換全新題目）
+            </button>
+            <button id="report-retry-btn" class="hero-cta-btn secondary" style="padding: 0.75rem 1.4rem; font-size: 0.95rem;">
+              🔄 再測一次（重測相同試卷）
+            </button>
+            <button id="report-return-catalog-btn" class="hero-cta-btn secondary" style="padding: 0.75rem 1.4rem; font-size: 0.95rem;">
+              📚 選擇其他測驗卷
+            </button>
+            <button id="report-view-mistakes-btn" class="hero-cta-btn secondary" style="padding: 0.75rem 1.4rem; font-size: 0.95rem;">
+              📕 前往錯題本特訓
+            </button>
+          </div>
+        </div>
+
+        <div class="section-header-row">
+          <div class="section-title-wrap">
+            <h3>📑 試題逐題深度診斷解析</h3>
+            <p class="section-subtitle">點擊關聯教材按鈕可一鍵跳轉至對應知識章節補強弱點</p>
+          </div>
+        </div>
+        <div class="questions-review-wrap" id="report-questions-review-list"></div>
+      </div>
+
+      <!-- Subview 4: Mistakes Notebook -->
+      <div id="exam-mistakes-view" style="display: none;">
+        <div class="mistakes-top-toolbar">
+          <div>
+            <h3 style="font-size: 1.25rem;">📕 智慧錯題本專區</h3>
+            <p style="color: var(--text-secondary); font-size: 0.88rem;">
+              記錄每一次測驗失誤，透過反覆重測達到徹底融會貫通
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <button class="hero-cta-btn primary" id="retake-all-mistakes-btn">
+              ⚡ 錯題全員回歸特訓試卷
+            </button>
+            <button class="hero-cta-btn secondary" id="clear-mistakes-btn">
+              🗑️ 清空錯題本
+            </button>
+          </div>
+        </div>
+
+        <!-- Q比 錯題本伴學卡 (Duolingo Style) -->
+        <div class="duo-mistakes-mascot-card">
+          <img src="assets/qbi/qbi_sit_anim.webp" alt="Q比 錯題特訓" class="duo-mistakes-qbi-img">
+          <div class="duo-mistakes-qbi-text">
+            <strong>🐾 Q比 智慧錯題特訓心法：</strong>
+            <p>做錯題不是壞事，它精準幫你找到了知識盲點！跟著 Q比 把每道題目的底層觀念想通，點擊「錯題全員回歸特訓」重練一遍，下次必拿滿分！</p>
+          </div>
+        </div>
+
+        <div id="mistakes-list-container"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: 📊 學習戰情 (Study Statistics) -->
+    <section class="app-main-section" id="section-stats">
+      <div class="section-header-row">
+        <div class="section-title-wrap">
+          <h2>📊 個人學習成長戰情室</h2>
+          <p class="section-subtitle">即時監控你的學習軌跡、知識收藏與能力維度進展</p>
+        </div>
+      </div>
+
+      <!-- Q比 成長激勵卡片 -->
+      <div class="duo-stats-mascot-banner">
+        <img src="assets/qbi/qbi_jump_anim.webp" alt="Q比 學習戰情" class="duo-stats-qbi-img">
+        <div class="duo-stats-qbi-info">
+          <h3>🎉 Q比 陪伴你的學習軌跡已累積 3 天連勝！</h3>
+          <p>精準掌握康軒、翰林、南一各版本單元，每一次練習都在為你的大考累積超強實力！保持滿滿熱情！</p>
+          <div class="duo-stats-mini-tags">
+            <span class="mini-tag">🔥 連勝打卡 3 天</span>
+            <span class="mini-tag">⚡ Q比 能量 100%</span>
+            <span class="mini-tag">🏆 掌握度 98.5%</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1.5rem; border-radius: var(--radius-lg); cursor: pointer;" onclick="window.appRouter.navigateTo('materials');">
+          <span style="font-size: 0.82rem; color: var(--text-secondary); font-weight: 600;">已收藏精華教材</span>
+          <h3 id="stat-saved-count" style="font-size: 2.2rem; font-family: 'Outfit'; color: var(--accent-cyan); margin-top: 0.35rem;">0</h3>
+          <span style="font-size: 0.8rem; color: var(--accent-cyan);">查看收藏教材 ➔</span>
+        </div>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1.5rem; border-radius: var(--radius-lg); cursor: pointer;" onclick="window.appRouter.navigateTo('quiz'); if(window.examEngine) window.examEngine.switchExamView('mistakes');">
+          <span style="font-size: 0.82rem; color: var(--text-secondary); font-weight: 600;">當前待消滅錯題</span>
+          <h3 id="stat-mistakes-count" style="font-size: 2.2rem; font-family: 'Outfit'; color: var(--accent-rose); margin-top: 0.35rem;">0</h3>
+          <span style="font-size: 0.8rem; color: var(--accent-rose);">進入錯題消滅戰 ➔</span>
+        </div>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1.5rem; border-radius: var(--radius-lg); cursor: pointer;" onclick="window.appRouter.navigateTo('quiz'); if(window.examEngine) window.examEngine.switchExamView('catalog');">
+          <span style="font-size: 0.82rem; color: var(--text-secondary); font-weight: 600;">已解鎖模擬考卷</span>
+          <h3 id="stat-total-exams" style="font-size: 2.2rem; font-family: 'Outfit'; color: var(--primary-light); margin-top: 0.35rem;">11 套</h3>
+          <span style="font-size: 0.8rem; color: var(--primary-light);">前往挑選試卷測驗 ➔</span>
+        </div>
+      </div>
+
+      <!-- Quick Test Action Banner -->
+      <div style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(6,182,212,0.15)); border: 1px solid var(--border-glow); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+        <div>
+          <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.25rem;">📝 想要立刻進行隨堂測驗嗎？</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">收錄國一到高中 11 套純淨專項試卷，隨點隨測，邊做邊看詳解！</p>
+        </div>
+        <button class="hero-cta-btn primary" onclick="window.appRouter.navigateTo('quiz'); if(window.examEngine) window.examEngine.switchExamView('catalog');">
+          🚀 立即進入模擬考場 ➔
+        </button>
+      </div>
+
+      <div class="section-header-row">
+        <div class="section-title-wrap">
+          <h3>⭐ 我的精華筆記與教材收藏</h3>
+        </div>
+      </div>
+      <div id="stats-bookmarks-list" style="display: flex; flex-direction: column; gap: 0.85rem;"></div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: Material Full Reader -->
+  <div class="modal-overlay" id="material-reader-modal">
+    <div class="modal-window large">
+      <div class="modal-header">
+        <span class="subject-badge">📖 深度教材研讀室</span>
+        <button class="modal-close-btn" id="close-reader-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="reader-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Writing Evaluation Report -->
+  <div class="modal-overlay" id="eval-report-modal">
+    <div class="modal-window large">
+      <div class="modal-header">
+        <h3>✨ AI 深度評閱診斷報告</h3>
+        <button class="modal-close-btn" id="close-eval-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="eval-report-body"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Model Essay Viewer -->
+  <div class="modal-overlay" id="model-essay-modal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>🏆 滿分標竿示範文章</h3>
+        <button class="modal-close-btn" id="close-model-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="model-essay-body"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Custom Quiz Generator -->
+  <div class="modal-overlay" id="custom-quiz-generator-modal">
+    <div class="modal-window" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3>🎲 AI 智慧自訂組卷器</h3>
+        <button class="modal-close-btn" id="close-custom-quiz-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem;">
+          自選課綱版本與測驗領域，GTs (Go to Study) 100% 精準組卷，絕無跨科干擾題！
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 1.15rem;">
+          <div>
+            <label style="font-weight: 700; font-size: 0.88rem; display: block; margin-bottom: 0.4rem;">測驗領域與單元：</label>
+            <select id="custom-quiz-subject" class="clean-select" style="width: 100%;">
+              <option value="photosynthesis">🌿 生物：光合作用專項 (純自然考題)</option>
+              <option value="science">🔬 國一自然生物 (康軒/翰林 1-1~1-3、3-2)</option>
+              <option value="g8_phy">🔦 國二理化 (八年級 波動、透鏡成像與熱量計算)</option>
+              <option value="g8_math">📐 國二數學 (八年級 乘法公式與畢氏定理)</option>
+              <option value="g9_science">🚀 國三會考自然 (力與運動、電學歐姆定律、地科)</option>
+              <option value="g9_math">📐 國三會考數學 (相似形比例線段與圓周角)</option>
+              <option value="senior_science">🧬 高中學測自然 (分子生物中心法則與天體力學)</option>
+              <option value="senior_math">📈 高中學測數學 (多項式餘式定理與指對數)</option>
+              <option value="chinese">✍️ 國一國文 (康軒/翰林 1-1~1-2、背影與字體)</option>
+              <option value="math">🔢 國一數學 (康軒/翰林 1-1~1-2、負數數線指數律)</option>
+              <option value="english">🌍 英文 (國中基礎與學術語法)</option>
+              <option value="all">跨學科綜合模擬測驗</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-weight: 700; font-size: 0.88rem; display: block; margin-bottom: 0.4rem;">題目數量：</label>
+            <select id="custom-quiz-count" class="clean-select" style="width: 100%;">
+              <option value="5">5 題 (快速隨堂抽測)</option>
+              <option value="8" selected>8 題 (標準實力評估)</option>
+              <option value="12">12 題 (深度模擬大考)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-weight: 700; font-size: 0.88rem; display: block; margin-bottom: 0.4rem;">作答模式：</label>
+            <select id="custom-quiz-mode" class="clean-select" style="width: 100%;">
+              <option value="strict">正式模考模式 (交卷後揭曉總分與解析)</option>
+              <option value="practice">自習刷題模式 (每答一題即刻看正誤詳解)</option>
+            </select>
+          </div>
+
+          <button id="do-generate-custom-quiz-btn" class="eval-submit-btn" style="width: 100%; justify-content: center; margin-top: 0.5rem;">
+            🚀 立即生成並開始測驗
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Floating Mascot Bot & Drawer (Q比) -->
+  <div class="ai-floating-widget">
+    <div class="ai-widget-peek-bubble" id="ai-widget-peek-bubble" onclick="if(window.aiTutor) window.aiTutor.handleWidgetClick();" title="點我向 Q比 提問">
+      <span id="ai-widget-peek-text">🐾 問問 Q比！</span>
+    </div>
+    <button class="ai-avatar-btn" id="ai-tutor-trigger-btn" onclick="if(window.aiTutor) window.aiTutor.handleWidgetClick();" title="開啟 AI 智學導師 Q比 (Q-Bi)">
+      <img src="assets/qbi/qbi_avatar.png" alt="Q比 Mascot" class="ai-avatar-inner-img">
+      <span class="tutor-pulse-indicator" id="tutor-badge-pulse"></span>
+    </button>
+  </div>
+
+  <!-- AI Tutor Chat Drawer -->
+  <div class="ai-tutor-drawer" id="ai-tutor-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title-box">
+        <img src="assets/qbi/qbi_avatar.png" alt="Q-Bi" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #38bdf8;">
+        <div>
+          <h4 style="margin:0; font-size:1rem; font-weight:800; display:flex; align-items:center; gap:0.35rem;">
+            🤖 AI 智學導師 Q比 (Q-Bi)
+          </h4>
+          <span class="online-tag">● 在線輔導中・全科課綱隨時答</span>
+        </div>
+      </div>
+      <button class="modal-close-btn" id="close-ai-tutor-btn" onclick="if(window.aiTutor) window.aiTutor.toggleChat(false);">&times;</button>
+    </div>
+
+    <div class="drawer-chat-body" id="ai-chat-messages-container"></div>
+
+    <div class="typing-dots" id="ai-typing-indicator">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+
+    <div class="drawer-presets-bar" id="ai-chat-presets"></div>
+
+    <div class="drawer-input-row">
+      <input type="text" id="ai-chat-input" class="drawer-input" placeholder="問導師任何問題（例如：幫我想個作文開頭、解釋光合作用...）">
+      <button id="ai-send-msg-btn" class="drawer-send-btn">發送</button>
+    </div>
+  </div>
+
+  <!-- Floating Toast -->
+  <div id="app-floating-toast" class="app-toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/curriculumData.js?v=4"></script>
+  <script src="js/materialsData.js?v=4"></script>
+  <script src="js/writingData.js?v=4"></script>
+  <script src="js/examData.js?v=4"></script>
+  <script src="js/soundEffects.js?v=4"></script>
+  <script src="js/qbiCompanion.js?v=4"></script>
+  <script src="js/searchEngine.js?v=4"></script>
+  <script src="js/writingCoach.js?v=4"></script>
+  <script src="js/examEngine.js?v=4"></script>
+  <script src="js/aiTutor.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
+</body>
+</html>
