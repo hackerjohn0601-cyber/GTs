@@ -1,0 +1,659 @@
+/* ==========================================================================
+   GTs (Go To Study) - Dedicated Mobile & Small Screen Responsive Stylesheet
+   Optimized specifically for smartphones (iOS Safari, Android Chrome)
+   ========================================================================== */
+
+/* 1. Base Touch & Viewport Optimization */
+@media screen and (max-width: 768px) {
+  html, body {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button, input, select, textarea, .interactive-card, .unit-chip-btn, .duo-pose-btn {
+    touch-action: manipulation;
+  }
+
+  button:active, .interactive-card:active {
+    transform: scale(0.97);
+  }
+
+  /* Container */
+  .app-container {
+    padding: 0.75rem 0.65rem;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* 2. App Header & Mobile Navigation Bar */
+  .app-header {
+    padding: 0;
+  }
+
+  .header-inner {
+    padding: 0.5rem 0.65rem;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .brand-area {
+    gap: 0.5rem;
+  }
+
+  .brand-logo-img {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+  }
+
+  .brand-text-col h1 {
+    font-size: 1.15rem;
+    letter-spacing: -0.3px;
+  }
+
+  .brand-tagline {
+    display: none; /* Hide long tagline to preserve vertical space on mobile */
+  }
+
+  .header-right-tools {
+    gap: 0.4rem;
+  }
+
+  .tool-icon-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+  }
+
+  .main-nav {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 3px;
+    padding: 3px;
+    margin-top: 0.25rem;
+    background: rgba(15, 23, 42, 0.7);
+    border-radius: 12px;
+  }
+
+  .main-nav-item {
+    flex: 1;
+    padding: 0.42rem 0.25rem;
+    font-size: 0.76rem;
+    gap: 0.2rem;
+    justify-content: center;
+    white-space: nowrap;
+    border-radius: 9px;
+  }
+
+  /* 3. Hero Banner & Compact Q-Bi Mascot Stage */
+  .hero-banner {
+    grid-template-columns: 1fr;
+    padding: 1.15rem 0.85rem;
+    margin-bottom: 1.15rem;
+    gap: 1.15rem;
+    border-radius: 16px;
+  }
+
+  .hero-glow-sphere {
+    width: 200px;
+    height: 200px;
+    top: -50px;
+    left: -50px;
+  }
+
+  .hero-badge-pill {
+    font-size: 0.72rem;
+    padding: 0.22rem 0.6rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .hero-title {
+    font-size: 1.25rem;
+    line-height: 1.35;
+    margin-bottom: 0.45rem;
+    letter-spacing: -0.3px;
+  }
+
+  .hero-description {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    margin-bottom: 0.85rem;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    width: 100%;
+  }
+
+  .hero-cta-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.84rem;
+    border-radius: 10px;
+  }
+
+  /* Q-Bi Mascot Compact Mobile Sizing */
+  .duo-qbi-stage {
+    max-width: 100%;
+  }
+
+  .duo-speech-bubble {
+    padding: 0.6rem 0.8rem;
+    border-radius: 14px;
+    margin-bottom: 0.45rem;
+    border-width: 2px;
+    box-shadow: 0 3px 0 #0284c7;
+  }
+
+  .duo-bubble-name {
+    font-size: 0.76rem;
+  }
+
+  .duo-bubble-badge {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .duo-speech-bubble p {
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+
+  .duo-mascot-wrap {
+    padding: 0;
+  }
+
+  .duo-mascot-img {
+    width: 105px !important;
+    height: 105px !important;
+  }
+
+  .duo-mascot-wrap.jumping .duo-mascot-img {
+    width: 120px !important;
+    height: 120px !important;
+    margin-top: -6px;
+    margin-bottom: -6px;
+  }
+
+  .duo-mascot-shadow {
+    width: 80px !important;
+    height: 10px !important;
+    margin-top: -4px;
+    margin-bottom: 0.5rem;
+  }
+
+  .duo-mascot-wrap.jumping .duo-mascot-shadow {
+    width: 90px !important;
+  }
+
+  .fx-item {
+    font-size: 1rem;
+  }
+
+  /* 5 Pose Action Buttons */
+  .duo-pose-selector {
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .duo-pose-btn {
+    padding: 0.28rem 0.5rem;
+    font-size: 0.74rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 0 var(--border-subtle);
+  }
+
+  /* Character Musical Environment Bar */
+  .duo-music-env-bar {
+    padding: 0.4rem 0.6rem;
+    border-radius: 12px;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .env-info-group {
+    gap: 0.45rem;
+  }
+
+  .env-equalizer-bars {
+    width: 14px;
+    height: 14px;
+  }
+
+  .env-label {
+    font-size: 0.62rem;
+  }
+
+  .env-mood-pill {
+    font-size: 0.72rem;
+  }
+
+  .env-controls-group {
+    gap: 0.4rem;
+  }
+
+  .env-music-toggle-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.72rem;
+    border-radius: 8px;
+  }
+
+  .env-vol-wrapper {
+    gap: 2px;
+  }
+
+  .env-vol-slider {
+    width: 50px;
+  }
+
+  /* Gamify Bar */
+  .duo-gamify-bar {
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .duo-pill {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.45rem;
+  }
+
+  /* 4. Curriculum Navigator Panel */
+  .curriculum-panel {
+    padding: 0.85rem 0.75rem;
+    border-radius: 14px;
+    margin-bottom: 1.15rem;
+  }
+
+  .curriculum-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-bottom: 0.65rem;
+  }
+
+  .curr-title {
+    font-size: 0.82rem;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+
+  .curr-badge {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+  }
+
+  .curr-edition-toggles {
+    width: 100%;
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .edition-toggle-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.32rem 0.45rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .curriculum-grade-row, .curriculum-units-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .curr-row-label {
+    font-size: 0.75rem;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .grade-pills-wrap {
+    width: 100%;
+    display: flex;
+    gap: 0.35rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  .grade-pill-btn {
+    flex-shrink: 0;
+    padding: 0.28rem 0.55rem;
+    font-size: 0.75rem;
+    border-radius: 6px;
+  }
+
+  .curr-units-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .unit-chip-btn {
+    padding: 0.32rem 0.55rem;
+    font-size: 0.75rem;
+    gap: 0.3rem;
+    border-radius: 8px;
+  }
+
+  /* 5. Search Engine & Curated Materials Explorer */
+  .search-hero-box {
+    padding: 0.85rem 0.75rem;
+    margin-bottom: 1.15rem;
+    border-radius: 14px;
+  }
+
+  .search-input-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.45rem;
+  }
+
+  .search-lead-icon {
+    display: none;
+  }
+
+  .search-main-input {
+    width: 100%;
+    font-size: 0.88rem;
+    padding: 0.4rem 0.25rem;
+  }
+
+  .search-action-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+  }
+
+  .popular-chips-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    margin-top: 0.65rem;
+  }
+
+  .popular-chips-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .popular-chip {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .category-filter-bar {
+    display: flex;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.35rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cat-filter-btn {
+    flex-shrink: 0;
+    font-size: 0.76rem;
+    padding: 0.32rem 0.65rem;
+    white-space: nowrap;
+  }
+
+  /* All Grids - Full Width Single Column on Mobile */
+  .curated-grid, 
+  .web-results-grid, 
+  .search-cards-grid, 
+  .exam-papers-grid,
+  .topic-selection-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  .material-card, .exam-paper-card, .topic-card {
+    padding: 0.95rem 0.85rem;
+    border-radius: 14px;
+  }
+
+  .mat-card-title, .paper-title {
+    font-size: 0.95rem;
+  }
+
+  .mat-card-desc, .paper-desc {
+    font-size: 0.82rem;
+  }
+
+  /* 6. Adaptive Quiz & Exam Simulator */
+  .exam-hud-bar {
+    padding: 0.65rem 0.75rem;
+    gap: 0.45rem;
+    justify-content: space-between;
+  }
+
+  .hud-left, .hud-right-actions {
+    gap: 0.4rem;
+  }
+
+  .exam-mode-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .hud-timer-box {
+    font-size: 0.95rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .hud-btn {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.55rem;
+  }
+
+  .question-body-wrap {
+    padding: 1rem 0.75rem;
+  }
+
+  .current-q-pill {
+    font-size: 0.85rem;
+  }
+
+  .q-text-large {
+    font-size: 1.02rem !important;
+    line-height: 1.55;
+    margin-bottom: 1.15rem;
+  }
+
+  .options-grid {
+    gap: 0.55rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .exam-option-card {
+    padding: 0.75rem 0.85rem;
+    gap: 0.65rem;
+    border-radius: 12px;
+  }
+
+  .option-key-badge {
+    width: 26px;
+    height: 26px;
+    font-size: 0.82rem;
+    border-radius: 6px;
+  }
+
+  .option-text {
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .practice-explanation-card {
+    padding: 0.85rem;
+    font-size: 0.82rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .exam-footer-nav {
+    padding: 0.75rem;
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+
+  .exam-nav-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* 7. Writing Coach (寫作導師) */
+  .writing-hero-banner {
+    padding: 1rem 0.85rem;
+  }
+
+  .writing-steps-tracker {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.35rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .step-badge-btn {
+    flex-shrink: 0;
+    padding: 0.32rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .writing-textarea {
+    font-size: 0.92rem;
+    min-height: 160px;
+    padding: 0.75rem;
+  }
+
+  .rubric-score-box {
+    padding: 0.85rem;
+  }
+
+  /* 8. Floating AI Tutor Q-Bi Mascot Bot & Chat Drawer (Native Bottom-Sheet Style) */
+  .ai-floating-widget {
+    position: fixed !important;
+    bottom: 18px !important;
+    top: auto !important;
+    right: 14px !important;
+    z-index: 1500;
+  }
+
+  .ai-avatar-btn {
+    width: 46px;
+    height: 46px;
+  }
+
+  .ai-widget-peek-bubble {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.55rem;
+  }
+
+  .ai-tutor-drawer {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    height: 80vh !important;
+    max-height: 85vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    margin: 0 !important;
+    transform: translateY(100%) !important;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .ai-tutor-drawer.active {
+    transform: translateY(0) !important;
+  }
+
+  .drawer-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .drawer-input-row {
+    padding: 0.65rem 0.85rem;
+  }
+
+  .drawer-input {
+    font-size: 0.88rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .drawer-send-btn {
+    padding: 0.5rem 0.95rem;
+    font-size: 0.85rem;
+  }
+
+  /* Grids and Comparison Boxes */
+  .compare-grid, 
+  .rubric-bars-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Modals on Mobile */
+  .modal-overlay {
+    padding: 0.5rem !important;
+  }
+
+  .modal-window, .modal-window.large {
+    width: 96vw !important;
+    max-width: 96vw !important;
+    max-height: 92vh !important;
+    border-radius: 16px !important;
+    margin: 0 auto;
+  }
+
+  .modal-header {
+    padding: 0.75rem 0.95rem !important;
+  }
+
+  .modal-header h3 {
+    font-size: 1rem !important;
+  }
+
+  .modal-body {
+    padding: 0.95rem 0.85rem !important;
+  }
+
+  /* Stats Mascot Banner */
+  .duo-stats-mascot-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem 0.85rem;
+    gap: 0.85rem;
+  }
+
+  .duo-stats-qbi-img {
+    width: 85px;
+    height: 85px;
+  }
+
+  .duo-stats-mini-tags {
+    justify-content: center;
+  }
+}
