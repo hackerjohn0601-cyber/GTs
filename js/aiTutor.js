@@ -494,6 +494,25 @@ class AiTutor {
       }
     }
 
+    // 0. 版本差異與跨版本對照速查
+    if ((q.includes('差別') || q.includes('不同') || q.includes('對照') || (q.includes('版本') && !q.includes('國一'))) && (q.includes('康軒') || q.includes('翰林') || q.includes('南一') || q.includes('課綱'))) {
+      return `🔄 **康軒 ✕ 翰林 ✕ 南一：108 課綱三大版本差異深度解析**
+<br><br>
+💡 **各版本主要編排差異亮點**：
+1. **國一生物（自然）**：
+   - **翰林版**：唯一獨創將「1-2 生物圈的範圍」獨立立節（探討深海熱泉管蟲等）；且**光合作用在翰林版為 3-3**（3-2 為人體養分與能量）。
+   - **康軒版**：光合作用編排於 **3-2 植物如何製造養分**；1-1 合併生命起源與生命四大現象。
+   - **南一版**：章名定為「探索生命」，光合作用位於 **3-2**。
+2. **國一國文（選文課次完全不同）**：
+   - **康軒版**：第 1 課為宋天儀《雅量》、第 2 課《夏夜》、第 6 課為朱自清《背影》。
+   - **翰林版**：第 1 課為楊喚《夏夜》、第 2 課《雅量》、第 3 課古蒙仁《吃冰的滋味》、第 5 課為《背影》。
+   - **南一版**：第 1 課為嚴長壽《做一隻光彩的螢火蟲》、第 4 課沈復《兒時記趣》、第 5 課為《背影》。
+<br><br>
+<button class="ai-msg-action-btn" onclick="window.appRouter.navigateTo('materials'); if (window.searchEngine) window.searchEngine.openCurriculumMatrixModal();">
+  📊 一鍵開啟「三大版本章節全面對照速查表」➔
+</button>`;
+    }
+
     // 1. 國一 1-1 到 1-2 / 康軒 / 翰林
     if ((q.includes('1-1') && q.includes('1-2')) || (q.includes('國一') && (q.includes('康軒') || q.includes('翰林') || q.includes('生物')))) {
       return `🎯 **已為您鎖定：國一 1-1 到 1-2 單元精準複習（康軒/翰林/南一版）**

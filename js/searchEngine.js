@@ -70,6 +70,23 @@ class SearchEngine {
         }
       });
     }
+
+    // Close curriculum comparison matrix modal
+    const closeMatrixBtn = document.getElementById('close-matrix-modal');
+    if (closeMatrixBtn) {
+      closeMatrixBtn.addEventListener('click', () => {
+        this.closeCurriculumMatrixModal();
+      });
+    }
+
+    const matrixModal = document.getElementById('curriculum-matrix-modal');
+    if (matrixModal) {
+      matrixModal.addEventListener('click', (e) => {
+        if (e.target === matrixModal) {
+          this.closeCurriculumMatrixModal();
+        }
+      });
+    }
   }
 
   // Render Taiwan Curriculum Editions & Grade Units Bar
@@ -86,12 +103,17 @@ class SearchEngine {
             <span class="curr-badge">📚 課綱版本專區</span>
             <strong>教育部審定教科書（康軒 ✕ 翰林 ✕ 南一）各單元精準複習</strong>
           </div>
-          <div class="curr-edition-toggles">
-            ${data.editions.map(ed => `
-              <button class="edition-toggle-btn ${ed.id === this.selectedEdition ? 'active' : ''}" data-edition="${ed.id}">
-                ${ed.icon} ${ed.name}
-              </button>
-            `).join('')}
+          <div class="curr-header-actions">
+            <div class="curr-edition-toggles">
+              ${data.editions.map(ed => `
+                <button class="edition-toggle-btn ${ed.id === this.selectedEdition ? 'active' : ''}" data-edition="${ed.id}">
+                  ${ed.icon} ${ed.name}
+                </button>
+              `).join('')}
+            </div>
+            <button id="open-curriculum-matrix-btn" class="curr-matrix-btn" title="查看三大版本章節全面對照速查">
+              🔄 跨版本章節對照速查
+            </button>
           </div>
         </div>
 
@@ -126,6 +148,15 @@ class SearchEngine {
         </div>
       </div>
     `;
+
+    // Bind matrix comparison button
+    const matrixBtn = container.querySelector('#open-curriculum-matrix-btn');
+    if (matrixBtn) {
+      matrixBtn.addEventListener('click', () => {
+        window.soundEngine.playClick();
+        this.openCurriculumMatrixModal();
+      });
+    }
 
     // Bind edition buttons
     container.querySelectorAll('.edition-toggle-btn').forEach(btn => {
@@ -165,6 +196,9 @@ class SearchEngine {
 
   // Master Combo Configurations with Explicit Subjects
   getAllComboConfigs() {
+    const isHanlin = this.selectedEdition === 'hanlin';
+    const isNani = this.selectedEdition === 'nani';
+
     return [
       // Grade 7 (國一)
       {
@@ -173,12 +207,27 @@ class SearchEngine {
         subjectId: 'bio_science',
         subjectName: '國中生物',
         subjectIcon: '🔬',
-        label: '⚡ 國一【生物】1-1 到 1-2 生命起源與細胞衝刺包',
+        label: isHanlin ? '⚡ 翰林【生物】1-1 到 1-4 生物圈與細胞構造衝刺包' : (isNani ? '⚡ 南一【生物】1-1 到 1-3 探索生命與細胞構造衝刺包' : '⚡ 康軒【生物】1-1 到 1-3 生命起源與細胞構造衝刺包'),
         gradeLabel: '國一 (七年級)',
-        termLabel: '上學期 1-1 到 1-2 單元',
+        termLabel: isHanlin ? '上學期 1-1 到 1-4 單元 (含生物圈)' : '上學期 1-1 到 1-3 單元',
         paperId: 'paper-g7-bio-ch1',
-        title: '國一生物 1-1 到 1-2 生命起源與細胞構造特訓',
-        keyTakeaways: [
+        title: isHanlin ? '翰林版 1-1 到 1-4 生命起源、生物圈範圍與細胞特訓' : (isNani ? '南一版 1-1 到 1-3 探索生命與細胞構造特訓' : '康軒版 1-1 到 1-3 生命起源與細胞構造特訓'),
+        keyTakeaways: isHanlin ? [
+          {
+            header: '💡 1-1 ~ 1-2 生命起源與生物圈範圍（翰林特色）',
+            bullets: [
+              '原始大氣：水氣、氨、甲烷、氫氣，<strong>無游離氧氣（O2）</strong>。',
+              '生物圈範圍：以海平面為準，向上 10,000 公尺、向下 10,000 公尺，約 20 公里厚度。深海熱泉管蟲靠硫化菌獲能。'
+            ]
+          },
+          {
+            header: '💡 1-3 ~ 1-4 細胞構造與物質通過細胞膜',
+            bullets: [
+              '粒線體：細胞能量發電廠產生 ATP；植物特有細胞壁與葉綠體（洋蔥表皮細胞無葉綠體）。',
+              '滲透作用：水分子擴散。紅血球置入純水吸水破裂，植物細胞膨脹挺直而不破。'
+            ]
+          }
+        ] : [
           {
             header: '💡 1-1 生命的起源與特性 核心速記',
             bullets: [
@@ -187,7 +236,7 @@ class SearchEngine {
             ]
           },
           {
-            header: '💡 1-2 細胞構造與功能 核心速記',
+            header: '💡 1-2 ~ 1-3 細胞構造與物質進出細胞',
             bullets: [
               '粒線體：動植物皆有，細胞的「能量發電廠」，進行呼吸作用產生 ATP。',
               '植物細胞特有：細胞壁（纖維素維持形狀）、葉綠體（綠色組織行光合作用）。',
@@ -195,7 +244,37 @@ class SearchEngine {
             ]
           }
         ],
-        ttsText: '國一生物 1-1 到 1-2 重點：原始大氣沒有氧氣。生命特徵包含代謝、生長、感應與生殖。植物細胞特有細胞壁與葉綠體，但洋蔥表皮細胞沒有葉綠體！'
+        ttsText: isHanlin ? '翰林版國一生物重點：生物圈範圍約二十公里。原始大氣沒有氧氣。植物細胞有細胞壁與葉綠體，洋蔥表皮細胞無葉綠體。' : '國一生物重點：原始大氣沒有氧氣。生命特徵包含代謝、生長、感應與生殖。植物細胞特有細胞壁與葉綠體！'
+      },
+      {
+        id: 'g7-photosynthesis',
+        gradeId: 'g7',
+        subjectId: 'bio_science',
+        subjectName: '國中生物',
+        subjectIcon: '🌿',
+        label: isHanlin ? '🌿 翰林【生物】3-3 植物的光合作用與能量轉換（注意翰林為 3-3！）' : (isNani ? '🌿 南一【生物】3-2 植物的光合作用與養分製造' : '🌿 康軒【生物】3-2 植物如何製造養分（光合作用）'),
+        gradeLabel: '國一 (七年級)',
+        termLabel: isHanlin ? '上學期 3-3 單元' : '上學期 3-2 單元',
+        paperId: 'paper-bio-photosynthesis',
+        title: isHanlin ? '翰林版 3-3：植物的光合作用與能量轉換全景特訓' : (isNani ? '南一版 3-2：植物的光合作用專項特訓' : '康軒版 3-2：植物如何製造養分（光合作用）特訓'),
+        keyTakeaways: [
+          {
+            header: '💡 光反應與碳反應秒殺心法',
+            bullets: [
+              '光反應（類囊體）：葉綠素吸光裂解「水（H2O）」釋放「氧氣（O2）」，產生能量 ATP。',
+              '碳反應（基質）：酵素催化利用 CO2 與光反應能量合成葡萄糖。',
+              '會考秒殺原則：光合作用釋放的氧氣來自「水」，絕對不是二氧化碳！'
+            ]
+          },
+          {
+            header: '💡 葉片製造澱粉探究實驗四步法',
+            bullets: [
+              '1. 沸水煮沸破壞細胞 → 2. 隔水加熱酒精水浴脫色 → 3. 溫水漂洗軟化 → 4. 滴加碘液檢驗。',
+              '照光部分呈藍黑色（有澱粉），遮光部分呈黃褐色（無澱粉）。'
+            ]
+          }
+        ],
+        ttsText: '光合作用重點：光反應分解水釋放氧氣，碳反應利用二氧化碳製造葡萄糖。酒精必須隔水加熱脫色！'
       },
       {
         id: 'g7-chinese',
@@ -203,24 +282,24 @@ class SearchEngine {
         subjectId: 'chinese',
         subjectName: '國中國文',
         subjectIcon: '✍️',
-        label: '⚡ 國一【國文】1-1 到 1-2 朱自清《背影》與字體演變衝刺包',
+        label: isHanlin ? '⚡ 翰林【國文】第1~5課《夏夜》《雅量》《吃冰》《背影》衝刺包' : (isNani ? '⚡ 南一【國文】第1~5課《做一隻光彩的螢火蟲》《夏夜》《背影》衝刺包' : '⚡ 康軒【國文】第1~6課《雅量》《夏夜》《背影》精讀衝刺包'),
         gradeLabel: '國一 (七年級)',
-        termLabel: '上學期 1-1 到 1-2 單元',
+        termLabel: '上學期 經典選文與語文常識',
         paperId: 'paper-g7-chinese-ch1',
-        title: '國一國文 1-1 到 1-2 經典抒情文與語文常識特訓',
+        title: isHanlin ? '翰林版 國一國文經典抒情與語文常識特訓' : (isNani ? '南一版 國一國文經典選文與語文常識特訓' : '康軒版 國一國文 經典抒情文與語文常識特訓'),
         keyTakeaways: [
           {
-            header: '💡 1-1 朱自清《背影》以小見大抒情精讀',
+            header: isHanlin ? '💡 翰林第 1 課《夏夜》與第 5 課《背影》' : (isNani ? '💡 南一第 1 課《做一隻光彩的螢火蟲》與第 5 課《背影》' : '💡 康軒第 1 課《雅量》與第 6 課《背影》'),
             bullets: [
-              '主旨：父親穿過鐵道攀爬月台買橘子的蹣跚背影，體現含蓄深沈的父愛。',
-              '色彩對照：以橘子的「朱紅」與父親衣服的「黑、深青」呈現強烈視覺焦點。'
+              '朱自清《背影》以買橘子的蹣跚身影象徵含蓄深沉的父愛，朱紅與深青色彩強烈對比。',
+              '各版本第一課分流：康軒《雅量》以人際包容開篇、翰林《夏夜》以童詩啟發情思、南一《螢火蟲》以勵志奮發破題。'
             ]
           },
           {
-            header: '💡 1-2 標點符號規範與字體演進順序',
+            header: '💡 語文常識：標點符號與六書漢字演進',
             bullets: [
-              '標點符號：破折號（——佔兩格，表示語氣轉折或聲音延長）；夾注號（（ ）補充說明）。',
-              '漢字演進：甲骨文（商代卜辭）→ 金文（周代鐘鼎）→ 小篆（秦李斯統一天下文字）→ 隸書（漢代，古今文字分水嶺）→ 楷書（魏晉鍾繇，現代標準楷體）。'
+              '破折號（——佔兩格，表示語氣轉折或延音）；夾注號補充說明。',
+              '漢字演進：甲骨文 → 金文 → 小篆 → 隸書（古今分水嶺）→ 楷書。'
             ]
           }
         ],
@@ -583,7 +662,8 @@ class SearchEngine {
     const contentBox = document.getElementById('reader-modal-body');
     if (!modal || !contentBox) return;
 
-    const editionName = this.selectedEdition === 'hanlin' ? '翰林版' : (this.selectedEdition === 'nani' ? '南一版' : '康軒版');
+    const editionId = (unit.editions && unit.editions.length === 1) ? unit.editions[0] : this.selectedEdition;
+    const editionName = editionId === 'hanlin' ? '翰林版' : (editionId === 'nani' ? '南一版' : '康軒版');
     const gradeBadgeMap = {
       'g7': '國一 (七年級)',
       'g8': '國二 (八年級)',
@@ -621,6 +701,13 @@ class SearchEngine {
         </div>
       </div>
 
+      ${unit.editionNotes ? `
+        <div class="reader-edition-spotlight">
+          <div class="spotlight-title">🔍 ${editionName} 專屬課綱亮點與段考特色</div>
+          <div class="spotlight-desc">${unit.editionNotes}</div>
+        </div>
+      ` : ''}
+
       <div class="reader-key-takeaways">
         <div class="takeaways-header">💡 本單元核心考點與會考/大考避坑指南</div>
         <ul class="takeaways-list">
@@ -651,10 +738,146 @@ class SearchEngine {
     const ttsBtn = document.getElementById('curr-unit-tts-btn');
     if (ttsBtn) {
       ttsBtn.addEventListener('click', () => {
-        const text = `【${sMeta.label}】${unit.unitName}。核心考點：${unit.keyPoints.join('。')}`;
+        const text = `【${editionName} ${sMeta.label}】${unit.unitName}。核心考點：${unit.keyPoints.join('。')}`;
         window.soundEngine.speakText(text);
       });
     }
+  }
+
+  // Open Curriculum Cross-Edition Comparison Matrix Modal
+  openCurriculumMatrixModal(activeCategory = 'g7-bio') {
+    const modal = document.getElementById('curriculum-matrix-modal');
+    const contentBox = document.getElementById('matrix-modal-body');
+    if (!modal || !contentBox || !window.CURRICULUM_DATA || !window.CURRICULUM_DATA.comparisonMatrix) return;
+
+    this.currentMatrixCategory = activeCategory;
+    this.renderMatrixContent(activeCategory);
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeCurriculumMatrixModal() {
+    const modal = document.getElementById('curriculum-matrix-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  }
+
+  // Render Interactive Comparison Matrix Content
+  renderMatrixContent(categoryKey) {
+    const contentBox = document.getElementById('matrix-modal-body');
+    if (!contentBox || !window.CURRICULUM_DATA) return;
+
+    const matrixData = window.CURRICULUM_DATA.comparisonMatrix;
+    const catKeys = [
+      { id: 'g7-bio', label: '🔬 國一生物（七上自然）' },
+      { id: 'g7-chinese', label: '✍️ 國一國文（七上選文）' },
+      { id: 'g7-math', label: '🔢 國一數學（七上單元）' },
+      { id: 'g8-phy', label: '🔬 國二理化（八上自然）' },
+      { id: 'g8-math', label: '🔢 國二數學（八上單元）' },
+      { id: 'g9-cap', label: '🎯 國三九年級（會考全科對照）' }
+    ];
+
+    const currentCat = matrixData[categoryKey] || matrixData['g7-bio'];
+
+    contentBox.innerHTML = `
+      <div class="matrix-container">
+        <!-- Tabs -->
+        <div class="matrix-tabs-row">
+          ${catKeys.map(k => `
+            <button class="matrix-tab-btn ${k.id === categoryKey ? 'active' : ''}" data-cat="${k.id}">
+              ${k.label}
+            </button>
+          `).join('')}
+        </div>
+
+        <!-- Summary Note Banner -->
+        <div class="matrix-summary-box">
+          ${currentCat.summaryNote}
+        </div>
+
+        <!-- Comparative Table -->
+        <div class="matrix-table-wrap">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th style="width: 17%;">🎯 核心學習概念 / 考點</th>
+                <th class="col-kx" style="width: 23%;">🟢 康軒版 (Kangxuan)</th>
+                <th class="col-hl" style="width: 23%;">🔵 翰林版 (Hanlin)</th>
+                <th class="col-ni" style="width: 23%;">🟠 南一版 (Nani)</th>
+                <th style="width: 14%;">💡 版本特色叮嚀</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${currentCat.items.map(item => `
+                <tr>
+                  <td class="matrix-topic-cell">${item.topic}</td>
+                  <td>
+                    <button class="matrix-unit-chip kx" data-edition="kangxuan" data-unit-id="${item.kx.unitId}">
+                      <span class="chip-code">${item.kx.code}</span>
+                      <span class="chip-name">${item.kx.name}</span>
+                      <span class="chip-action-hint">👆 點擊直達研讀/測驗</span>
+                    </button>
+                  </td>
+                  <td>
+                    <button class="matrix-unit-chip hl" data-edition="hanlin" data-unit-id="${item.hl.unitId}">
+                      <span class="chip-code">${item.hl.code}</span>
+                      <span class="chip-name">${item.hl.name}</span>
+                      <span class="chip-action-hint">👆 點擊直達研讀/測驗</span>
+                    </button>
+                  </td>
+                  <td>
+                    <button class="matrix-unit-chip ni" data-edition="nani" data-unit-id="${item.ni.unitId}">
+                      <span class="chip-code">${item.ni.code}</span>
+                      <span class="chip-name">${item.ni.name}</span>
+                      <span class="chip-action-hint">👆 點擊直達研讀/測驗</span>
+                    </button>
+                  </td>
+                  <td class="matrix-tip-cell">${item.tip}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+
+    // Bind tab clicks
+    contentBox.querySelectorAll('.matrix-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.soundEngine.playClick();
+        this.renderMatrixContent(btn.dataset.cat);
+      });
+    });
+
+    // Bind unit chip clicks inside table
+    contentBox.querySelectorAll('.matrix-unit-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.soundEngine.playClick();
+        const edition = btn.dataset.edition;
+        const unitId = btn.dataset.unitId;
+
+        // Close matrix modal
+        this.closeCurriculumMatrixModal();
+
+        // Switch active edition in UI
+        if (edition) {
+          this.selectedEdition = edition;
+          const editionBtns = document.querySelectorAll('.edition-toggle-btn');
+          editionBtns.forEach(b => {
+            b.classList.toggle('active', b.dataset.edition === edition);
+          });
+          this.renderUnitsButtons();
+        }
+
+        // Open target unit modal
+        const unit = window.CURRICULUM_DATA.units.find(u => u.id === unitId);
+        if (unit) {
+          this.openCurriculumUnitModal(unit);
+        }
+      });
+    });
   }
 
   renderPopularChips() {

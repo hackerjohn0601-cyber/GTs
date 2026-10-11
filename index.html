@@ -7,12 +7,21 @@
   <meta name="description" content="GTs (Go to Study) 專為學生打造的智慧學習機：支援康軒、翰林、南一課綱版本單元精準複習，全網開源教材即時檢索、四步引導式寫作導師與大考級自適應隨堂考場系統。">
   <link rel="icon" href="assets/logo.png" type="image/png">
 
+  <!-- PWA & Mobile Web App Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0284c7">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GTs">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/index.css?v=2">
-  <link rel="stylesheet" href="css/search.css?v=2">
-  <link rel="stylesheet" href="css/writing.css?v=2">
-  <link rel="stylesheet" href="css/quiz.css?v=2">
-  <link rel="stylesheet" href="css/mobile.css?v=2">
+  <link rel="stylesheet" href="css/index.css?v=3">
+  <link rel="stylesheet" href="css/search.css?v=3">
+  <link rel="stylesheet" href="css/writing.css?v=3">
+  <link rel="stylesheet" href="css/quiz.css?v=3">
+  <link rel="stylesheet" href="css/mobile.css?v=3">
 </head>
 <body>
 
@@ -43,6 +52,10 @@
       </nav>
 
       <div class="header-right-tools">
+        <button class="install-pwa-btn" id="install-app-btn" title="下載並安裝 GTs 到本機電腦/手機">
+          <span class="install-icon">📥</span>
+          <span class="install-text">下載 App</span>
+        </button>
         <button class="tool-icon-btn" id="sound-toggle-btn" title="切換系統音效">🔊</button>
         <button class="tool-icon-btn" id="theme-toggle-btn" title="切換深色/淺色主題">☀️</button>
       </div>
@@ -67,6 +80,9 @@
           支援國中 1-1 到 1-2 及各學期段考單元、全網即時開源教材檢索，透過四步導師法掌握記敘與思辨寫作，並以無跨科干擾的精準題庫自我檢測！
         </p>
         <div class="hero-cta-group">
+          <button class="hero-cta-btn highlight-install" id="hero-install-app-btn" title="下載 GTs 為電腦本機 App，免瀏覽器隨按隨學">
+            <span>📥 下載 App 到本機</span>
+          </button>
           <button class="hero-cta-btn primary" id="hero-quick-search-btn">
             <span>📚 課綱版本單元速查</span>
           </button>
@@ -561,6 +577,20 @@
     </div>
   </div>
 
+  <!-- MODAL: Curriculum Cross-Edition Comparison Matrix -->
+  <div class="modal-overlay" id="curriculum-matrix-modal">
+    <div class="modal-window extra-large" style="max-width: 1040px; width: 95vw;">
+      <div class="modal-header">
+        <div class="matrix-modal-title-wrap" style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+          <span class="matrix-badge" style="background:var(--primary-gradient); color:#fff; font-size:0.78rem; font-weight:800; padding:0.25rem 0.75rem; border-radius:var(--radius-full);">🔄 課綱版本對照速查</span>
+          <h3 style="margin:0; font-size: 1.15rem; font-weight:800;">康軒 ✕ 翰林 ✕ 南一：108 課綱三大版本章節全面對照速查</h3>
+        </div>
+        <button class="modal-close-btn" id="close-matrix-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="matrix-modal-body" style="padding: 1.25rem 1.5rem 2rem;"></div>
+    </div>
+  </div>
+
   <!-- MODAL: Writing Evaluation Report -->
   <div class="modal-overlay" id="eval-report-modal">
     <div class="modal-window large">
@@ -639,6 +669,98 @@
     </div>
   </div>
 
+  <!-- MODAL: PWA Chrome Download & Local App Installation -->
+  <div class="modal-overlay" id="pwa-install-modal">
+    <div class="modal-window pwa-install-window" style="max-width: 620px;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <img src="assets/icon-192.png" alt="GTs App Icon" style="width: 32px; height: 32px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+          <h3 style="margin: 0; font-size: 1.2rem;">下載與安裝 GTs 到電腦本機</h3>
+        </div>
+        <button class="modal-close-btn" id="pwa-modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body pwa-modal-content">
+        <!-- App Status Header -->
+        <div class="pwa-hero-card">
+          <img src="assets/icon-192.png" alt="GTs" class="pwa-app-icon">
+          <div class="pwa-app-details">
+            <div class="pwa-title-row">
+              <h4 class="pwa-app-name">GTs (Go to Study) 智慧伴學機</h4>
+              <span class="pwa-badge info" id="pwa-modal-status-badge">● 支援 Chrome 本機下載安裝</span>
+            </div>
+            <p class="pwa-app-desc">
+              安裝為本機獨立 App 後，免開瀏覽器即可從桌面或啟動台直接按圖示啟動，享受秒開極速與獨立視窗無干擾體驗！
+            </p>
+          </div>
+        </div>
+
+        <!-- Primary Action Trigger -->
+        <div class="pwa-action-box">
+          <button id="pwa-modal-action-btn" class="pwa-primary-install-btn">
+            🚀 立即從 Chrome 安裝到本機 (一鍵下載)
+          </button>
+          <button id="pwa-modal-shortcut-btn" class="pwa-secondary-btn" title="下載本機桌面直接啟動捷徑">
+            💾 下載桌面捷徑檔 (.url)
+          </button>
+        </div>
+
+        <!-- 3-Ways Visual Instructions -->
+        <div class="pwa-guide-section">
+          <h5 class="pwa-section-title">💡 如何在 Chrome 中下載並安裝為本機 App？</h5>
+          
+          <div class="pwa-steps-list">
+            <div class="pwa-step-item">
+              <div class="pwa-step-num">1</div>
+              <div class="pwa-step-content">
+                <div class="pwa-step-title">方式一：Chrome 網址列一鍵安裝（最推薦）</div>
+                <p>請留意 Google Chrome 最上方「網址列右側」（星號書籤旁），會出現一個 <strong>「電腦螢幕向下箭頭」圖示 💻⬇️</strong>，點擊它並選擇<strong>「安裝」</strong>即可。</p>
+              </div>
+            </div>
+
+            <div class="pwa-step-item">
+              <div class="pwa-step-num">2</div>
+              <div class="pwa-step-content">
+                <div class="pwa-step-title">方式二：Chrome 選單安裝</div>
+                <p>點選 Chrome 視窗右上角的三個點 <strong>「︙」 ➔「儲存與分享」➔「安裝 GTs...」</strong>（或「建立捷徑」並勾選「在新視窗中開啟」）。</p>
+              </div>
+            </div>
+
+            <div class="pwa-step-item">
+              <div class="pwa-step-num">3</div>
+              <div class="pwa-step-content">
+                <div class="pwa-step-title">方式三：本機直接點擊 App 啟動</div>
+                <p>安裝完成後，Chrome 會在電腦本機建立獨立原生 App：</p>
+                <ul class="pwa-step-list-sub">
+                  <li><strong>Mac 使用者</strong>：至「啟動台 (Launchpad)」或「應用程式」資料夾，即可看到 <strong>GTs</strong> 圖示，直接點擊開啟（亦可常駐至 Dock 列）！</li>
+                  <li><strong>Windows 使用者</strong>：桌面上會出現 <strong>GTs</strong> 圖示，雙擊即可獨立視窗全速啟動！</li>
+                  <li><strong>手機/平板</strong>：Android Chrome 點選「安裝應用程式」；iOS Safari 點分享鍵「加入主畫面」。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Why Install Benefits -->
+        <div class="pwa-benefits-grid">
+          <div class="pwa-benefit-card">
+            <span class="pwa-benefit-icon">⚡</span>
+            <div>
+              <h6>秒開極速</h6>
+              <p>內建離線智慧快取，教材題庫即點即學，無白屏延遲</p>
+            </div>
+          </div>
+          <div class="pwa-benefit-card">
+            <span class="pwa-benefit-icon">🖥️</span>
+            <div>
+              <h6>獨立視窗無干擾</h6>
+              <p>純淨無瀏覽器分頁干擾，仿原生軟體全螢幕沉浸學習</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- AI Floating Mascot Bot & Drawer (Q比) -->
   <div class="ai-floating-widget">
     <div class="ai-widget-peek-bubble" id="ai-widget-peek-bubble" onclick="if(window.aiTutor) window.aiTutor.handleWidgetClick();" title="點我向 Q比 提問">
@@ -685,16 +807,17 @@
   <div id="app-floating-toast" class="app-toast"></div>
 
   <!-- Scripts -->
-  <script src="js/curriculumData.js?v=4"></script>
-  <script src="js/materialsData.js?v=4"></script>
-  <script src="js/writingData.js?v=4"></script>
-  <script src="js/examData.js?v=4"></script>
-  <script src="js/soundEffects.js?v=4"></script>
-  <script src="js/qbiCompanion.js?v=4"></script>
-  <script src="js/searchEngine.js?v=4"></script>
-  <script src="js/writingCoach.js?v=4"></script>
-  <script src="js/examEngine.js?v=4"></script>
-  <script src="js/aiTutor.js?v=4"></script>
-  <script src="js/app.js?v=4"></script>
+  <script src="js/curriculumData.js?v=5"></script>
+  <script src="js/materialsData.js?v=5"></script>
+  <script src="js/writingData.js?v=5"></script>
+  <script src="js/examData.js?v=5"></script>
+  <script src="js/soundEffects.js?v=5"></script>
+  <script src="js/qbiCompanion.js?v=5"></script>
+  <script src="js/searchEngine.js?v=5"></script>
+  <script src="js/writingCoach.js?v=5"></script>
+  <script src="js/examEngine.js?v=5"></script>
+  <script src="js/aiTutor.js?v=5"></script>
+  <script src="js/pwaManager.js?v=5"></script>
+  <script src="js/app.js?v=5"></script>
 </body>
 </html>

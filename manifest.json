@@ -1,0 +1,84 @@
+{
+  "name": "GTs (Go to Study) 智慧伴學系統",
+  "short_name": "GTs",
+  "description": "GTs 全能教材導航 × 課綱版本精準複習 × 智慧考場系統",
+  "id": "/?source=pwa",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0a0f1d",
+  "theme_color": "#0284c7",
+  "categories": ["education", "books", "productivity"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "課綱教材庫",
+      "short_name": "教材",
+      "description": "探索各版本國中課綱單元與精選教材",
+      "url": "./#materials",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "寫作思維導師",
+      "short_name": "寫作",
+      "description": "四步引導式作文特訓與思維教練",
+      "url": "./#writing",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "大考級考場",
+      "short_name": "測驗",
+      "description": "自適應專項測驗與隨堂計時評量",
+      "url": "./#quiz",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "學習戰情中心",
+      "short_name": "戰情",
+      "description": "個人進度追蹤與弱點錯題本",
+      "url": "./#stats",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

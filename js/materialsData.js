@@ -1,19 +1,19 @@
 // Curated High-Quality Educational Materials Database aligned with Taiwan Curriculum (翰林、康軒、南一)
 window.MATERIALS_DATA = [
-  // 1. 光合作用 (國一生物 3-2 康軒/翰林核心)
+  // 1. 光合作用 (國一生物 康軒 3-2 / 翰林 3-3 / 南一 3-2 核心)
   {
     id: 'mat-photosynthesis-cellular',
-    title: '國一生物 3-2：植物光合作用與能量轉換全景圖解 (康軒/翰林版)',
+    title: '國一生物：植物光合作用與能量轉換全景圖解 (康軒 3-2 / 翰林 3-3 / 南一 3-2)',
     category: 'science',
     subject: '自然生物',
     subjectIcon: '🌿',
-    grade: '國一生物 (康軒/翰林 3-2) ｜ 會考大考必讀',
+    grade: '國一生物 (康軒 3-2 / 翰林 3-3 / 南一 3-2) ｜ 會考大考必讀',
     difficulty: '段考核心',
     readTime: '7 分鐘',
     views: 18400,
     rating: 5.0,
-    editionTag: '康軒版 3-2 ｜ 翰林版 3-2',
-    tags: ['光合作用', '光反應', '暗反應', '碳反應', '葉綠素脫色', '國一生物', '康軒版', '翰林版'],
+    editionTag: '康軒版 3-2 ｜ 翰林版 3-3 ｜ 南一版 3-2',
+    tags: ['光合作用', '光反應', '暗反應', '碳反應', '葉綠素脫色', '國一生物', '康軒版', '翰林版', '南一版'],
     summary: '從葉綠體類囊體的光反應水解產氧，到基質中碳反應合成葡萄糖。完整剖析會考大考必考的「隔水加熱葉綠素脫色」與「碘液澱粉檢驗」實驗步驟。',
     keyTakeaways: [
       '光反應（類囊體，需光）：葉綠素吸收光能分解「水（H2O）」釋放「氧氣（O2）」，產生 ATP 能量貨幣。',
