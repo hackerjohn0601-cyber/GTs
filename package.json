@@ -2,12 +2,13 @@
   "name": "gts",
   "version": "1.0.0",
   "description": "GTs (Go to Study) 智慧學習機",
+  "main": "server.js",
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "node scripts/dev-server.js",
-    "dev": "node scripts/dev-server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "keywords": ["education", "study", "exam", "ai-coach"],
   "author": "hackerjohn0601-cyber",

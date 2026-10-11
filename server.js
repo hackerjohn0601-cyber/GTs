@@ -4,7 +4,6 @@ const path = require('path');
 const url = require('url');
 
 const PORT = process.env.PORT || 3000;
-const ROOT_DIR = path.resolve(__dirname, '..');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -34,7 +33,7 @@ async function searchWebMaterials(query) {
     if (data.query && data.query.search) {
       for (const item of data.query.search) {
         const pageId = item.pageid;
-        let extract = item.snippet.replace(/<\/?[^>]+(>|$)/g, "");
+        let extract = (item.snippet || '').replace(/<\/?[^>]+(>|$)/g, '');
         results.push({
           id: 'web-' + pageId,
           title: item.title,
@@ -74,9 +73,23 @@ async function fetchFullArticle(title) {
   }
 }
 
+// Locate existing file across process.cwd() (Vercel) and __dirname (Local / Render)
+function findCandidateFile(relativePath) {
+  const candidateRoots = [process.cwd(), __dirname, path.join(__dirname, '..')];
+  for (const root of candidateRoots) {
+    try {
+      const fullPath = path.join(root, relativePath);
+      if (fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
+        return fullPath;
+      }
+    } catch (e) {}
+  }
+  return null;
+}
+
 const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  const pathname = parsedUrl.pathname;
+  const pathname = parsedUrl.pathname || '/';
 
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -117,39 +130,19 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Serve static files
+  // Normalize static asset path
   let safePath = path.normalize(pathname).replace(/^(\.\.[\/\\])+/, '');
-  if (safePath === '/' || safePath === '\\') {
+  if (safePath === '/' || safePath === '\\' || safePath === '') {
     safePath = '/index.html';
   }
 
-  const filePath = path.join(ROOT_DIR, safePath);
+  const existingFile = findCandidateFile(safePath);
 
-  fs.stat(filePath, (err, stats) => {
-    if (err || !stats.isFile()) {
-      // 404 fallback to index.html if not an api call
-      if (!pathname.startsWith('/api/')) {
-        const indexPath = path.join(ROOT_DIR, 'index.html');
-        fs.readFile(indexPath, (readErr, content) => {
-          if (readErr) {
-            res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-            res.end('404 Not Found');
-          } else {
-            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-            res.end(content);
-          }
-        });
-      } else {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Endpoint not found' }));
-      }
-      return;
-    }
-
-    const ext = path.extname(filePath).toLowerCase();
+  if (existingFile) {
+    const ext = path.extname(existingFile).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
-    fs.readFile(filePath, (readErr, content) => {
+    fs.readFile(existingFile, (readErr, content) => {
       if (readErr) {
         res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
         res.end('Server error');
@@ -167,9 +160,38 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, headers);
       res.end(content);
     });
-  });
+    return;
+  }
+
+  // Fallback ONLY for HTML page routes / SPA navigation (no extension or .html)
+  const ext = path.extname(safePath).toLowerCase();
+  if (!ext || ext === '.html') {
+    const indexFile = findCandidateFile('index.html');
+    if (indexFile) {
+      fs.readFile(indexFile, (readErr, content) => {
+        if (readErr) {
+          res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+          res.end('Server error');
+        } else {
+          res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+          res.end(content);
+        }
+      });
+      return;
+    }
+  }
+
+  // Explicit 404 for missing static assets (.css, .js, .png, etc.) so browsers never receive HTML as styles
+  res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+  res.end(`404 Not Found: ${pathname}`);
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`GTs (Go to Study) Server running at http://0.0.0.0:${PORT}`);
-});
+// Run server locally or on Render
+if (require.main === module || !process.env.VERCEL) {
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`GTs (Go to Study) Server running at http://0.0.0.0:${PORT}`);
+  });
+}
+
+// Export for Vercel Serverless Function runtime (@vercel/node)
+module.exports = server;
