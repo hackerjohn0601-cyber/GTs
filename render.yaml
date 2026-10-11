@@ -5,7 +5,7 @@ services:
     plan: free
     region: singapore
     buildCommand: npm install
-    startCommand: node server.js
+    startCommand: node scripts/dev-server.js
     envVars:
       - key: NODE_VERSION
         value: 20.18.0

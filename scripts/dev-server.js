@@ -4,6 +4,8 @@ const path = require('path');
 const url = require('url');
 
 const PORT = process.env.PORT || 3000;
+const ROOT_DIR = path.resolve(__dirname, '..');
+
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -23,7 +25,6 @@ const MIME_TYPES = {
 async function searchWebMaterials(query) {
   try {
     const encoded = encodeURIComponent(query.trim());
-    // Search Wikipedia API (supports Traditional/Simplified Chinese and English)
     const searchUrl = `https://zh.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encoded}&format=json&origin=*&srlimit=8`;
     const res = await fetch(searchUrl, { headers: { 'User-Agent': 'GTs-GoToStudy/1.0' } });
     if (!res.ok) throw new Error('Web search failed');
@@ -32,9 +33,8 @@ async function searchWebMaterials(query) {
     const results = [];
     if (data.query && data.query.search) {
       for (const item of data.query.search) {
-        // Fetch brief extract for each article
         const pageId = item.pageid;
-        let extract = item.snippet.replace(/<\/?[^>]+(>|$)/g, ""); // clean html tags
+        let extract = item.snippet.replace(/<\/?[^>]+(>|$)/g, "");
         results.push({
           id: 'web-' + pageId,
           title: item.title,
@@ -123,13 +123,13 @@ const server = http.createServer(async (req, res) => {
     safePath = '/index.html';
   }
 
-  const filePath = path.join(__dirname, safePath);
+  const filePath = path.join(ROOT_DIR, safePath);
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
       // 404 fallback to index.html if not an api call
       if (!pathname.startsWith('/api/')) {
-        const indexPath = path.join(__dirname, 'index.html');
+        const indexPath = path.join(ROOT_DIR, 'index.html');
         fs.readFile(indexPath, (readErr, content) => {
           if (readErr) {
             res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });

@@ -6,8 +6,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node scripts/dev-server.js",
+    "dev": "node scripts/dev-server.js"
   },
   "keywords": ["education", "study", "exam", "ai-coach"],
   "author": "hackerjohn0601-cyber",
