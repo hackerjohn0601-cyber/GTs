@@ -89,68 +89,294 @@ class SearchEngine {
     }
   }
 
-  // Render Taiwan Curriculum Editions & Grade Units Bar
+  // Render Taiwan Curriculum Editions & Grade Units Bar (Two-Column Master-Detail Layout)
   renderCurriculumBar() {
     const container = document.getElementById('curriculum-quick-navigator');
     if (!container || !window.CURRICULUM_DATA) return;
 
     const data = window.CURRICULUM_DATA;
 
+    // Helper to get grade metadata
+    const getGradeMeta = (gId) => {
+      const g = data.grades.find(x => x.id === gId);
+      return g || { name: gId, icon: '📚', badge: '' };
+    };
+
     container.innerHTML = `
-      <div class="curriculum-panel">
-        <div class="curriculum-panel-header">
-          <div class="curr-title">
-            <span class="curr-badge">📚 課綱版本專區</span>
-            <strong>教育部審定教科書（康軒 ✕ 翰林 ✕ 南一）各單元精準複習</strong>
-          </div>
-          <div class="curr-header-actions">
-            <div class="curr-edition-toggles">
-              ${data.editions.map(ed => `
-                <button class="edition-toggle-btn ${ed.id === this.selectedEdition ? 'active' : ''}" data-edition="${ed.id}">
-                  ${ed.icon} ${ed.name}
-                </button>
-              `).join('')}
+      <div class="curriculum-workspace-layout">
+        <!-- LEFT SIDEBAR: Grade & Subject Hierarchy Navigation -->
+        <aside class="curr-sidebar" id="curr-sidebar">
+          <div class="curr-sidebar-header">
+            <span class="curr-sidebar-icon">🎓</span>
+            <div>
+              <h4 class="curr-sidebar-title">年級與科目導覽</h4>
+              <p class="curr-sidebar-sub">左側選年級 ➔ 點入選科目 ➔ 選擇單元</p>
             </div>
-            <button id="open-curriculum-matrix-btn" class="curr-matrix-btn" title="查看三大版本章節全面對照速查">
-              🔄 跨版本章節對照速查
+          </div>
+
+          <!-- JUNIOR HIGH (國中階段: 國一 ~ 國三) -->
+          <div class="curr-grade-group">
+            <div class="curr-group-label">
+              <span>🏫 國中階段 (7 ~ 9 年級)</span>
+            </div>
+            <div class="curr-grade-items">
+              <!-- 國一 -->
+              <div class="curr-grade-card ${this.selectedGrade === 'g7' ? 'active' : ''}" data-grade="g7">
+                <div class="curr-grade-header">
+                  <span class="curr-grade-icon">🌱</span>
+                  <div class="curr-grade-info">
+                    <span class="curr-grade-name">國一 (七年級)</span>
+                    <span class="curr-grade-tag">45 個精選單元 · 七上/七下</span>
+                  </div>
+                  <span class="curr-chevron">▶</span>
+                </div>
+                <div class="curr-subject-submenu">
+                  <button class="curr-sub-item ${this.selectedSubject === 'all' && this.selectedGrade === 'g7' ? 'active' : ''}" data-subject="all">
+                    <span>✨ 全部科目</span>
+                    <span class="sub-count">45</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'bio_science' && this.selectedGrade === 'g7' ? 'active' : ''}" data-subject="bio_science">
+                    <span>🔬 自然與生物</span>
+                    <span class="sub-count">24</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'chinese' && this.selectedGrade === 'g7' ? 'active' : ''}" data-subject="chinese">
+                    <span>✍️ 國語文</span>
+                    <span class="sub-count">12</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'math' && this.selectedGrade === 'g7' ? 'active' : ''}" data-subject="math">
+                    <span>🔢 數學邏輯</span>
+                    <span class="sub-count">8</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'english' && this.selectedGrade === 'g7' ? 'active' : ''}" data-subject="english">
+                    <span>🌍 英語文</span>
+                    <span class="sub-count">1</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 國二 -->
+              <div class="curr-grade-card ${this.selectedGrade === 'g8' ? 'active' : ''}" data-grade="g8">
+                <div class="curr-grade-header">
+                  <span class="curr-grade-icon">🌿</span>
+                  <div class="curr-grade-info">
+                    <span class="curr-grade-name">國二 (八年級)</span>
+                    <span class="curr-grade-tag">理化光學 · 畢氏定理</span>
+                  </div>
+                  <span class="curr-chevron">▶</span>
+                </div>
+                <div class="curr-subject-submenu">
+                  <button class="curr-sub-item ${this.selectedSubject === 'all' && this.selectedGrade === 'g8' ? 'active' : ''}" data-subject="all">
+                    <span>✨ 全部科目</span>
+                    <span class="sub-count">6</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'bio_science' && this.selectedGrade === 'g8' ? 'active' : ''}" data-subject="bio_science">
+                    <span>🔬 自然與理化</span>
+                    <span class="sub-count">3</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'math' && this.selectedGrade === 'g8' ? 'active' : ''}" data-subject="math">
+                    <span>🔢 數學幾何</span>
+                    <span class="sub-count">3</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 國三 -->
+              <div class="curr-grade-card ${this.selectedGrade === 'g9' ? 'active' : ''}" data-grade="g9">
+                <div class="curr-grade-header">
+                  <span class="curr-grade-icon">🎯</span>
+                  <div class="curr-grade-info">
+                    <span class="curr-grade-name">國三 (九年級會考)</span>
+                    <span class="curr-grade-tag">會考 A++ 整合衝刺</span>
+                  </div>
+                  <span class="curr-chevron">▶</span>
+                </div>
+                <div class="curr-subject-submenu">
+                  <button class="curr-sub-item ${this.selectedSubject === 'all' && this.selectedGrade === 'g9' ? 'active' : ''}" data-subject="all">
+                    <span>✨ 全部會考科目</span>
+                    <span class="sub-count">6</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'bio_science' && this.selectedGrade === 'g9' ? 'active' : ''}" data-subject="bio_science">
+                    <span>🔬 會考自然 (力學/電學/地科)</span>
+                    <span class="sub-count">4</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'math' && this.selectedGrade === 'g9' ? 'active' : ''}" data-subject="math">
+                    <span>🔢 會考數學 (幾何/圓周角)</span>
+                    <span class="sub-count">2</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SENIOR HIGH (高中階段: 高一 ~ 高三) -->
+          <div class="curr-grade-group">
+            <div class="curr-group-label">
+              <span>🎓 高中階段 (10 ~ 12 年級)</span>
+            </div>
+            <div class="curr-grade-items">
+              <!-- 高一 -->
+              <div class="curr-grade-card ${this.selectedGrade === 'g10' ? 'active' : ''}" data-grade="g10">
+                <div class="curr-grade-header">
+                  <span class="curr-grade-icon">📘</span>
+                  <div class="curr-grade-info">
+                    <span class="curr-grade-name">高一 (十年級)</span>
+                    <span class="curr-grade-tag">必修中心法則 · 餘式定理</span>
+                  </div>
+                  <span class="curr-chevron">▶</span>
+                </div>
+                <div class="curr-subject-submenu">
+                  <button class="curr-sub-item ${this.selectedSubject === 'all' && this.selectedGrade === 'g10' ? 'active' : ''}" data-subject="all">
+                    <span>✨ 全部科目</span>
+                    <span class="sub-count">3</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'bio_science' && this.selectedGrade === 'g10' ? 'active' : ''}" data-subject="bio_science">
+                    <span>🔬 必修自然 (生物/物理)</span>
+                    <span class="sub-count">2</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'math' && this.selectedGrade === 'g10' ? 'active' : ''}" data-subject="math">
+                    <span>🔢 必修數學 (多項式)</span>
+                    <span class="sub-count">1</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 高二 -->
+              <div class="curr-grade-card ${this.selectedGrade === 'g11' ? 'active' : ''}" data-grade="g11">
+                <div class="curr-grade-header">
+                  <span class="curr-grade-icon">🔬</span>
+                  <div class="curr-grade-info">
+                    <span class="curr-grade-name">高二 (十一年級)</span>
+                    <span class="curr-grade-tag">克卜勒定律 · 向量內積</span>
+                  </div>
+                  <span class="curr-chevron">▶</span>
+                </div>
+                <div class="curr-subject-submenu">
+                  <button class="curr-sub-item ${this.selectedSubject === 'all' && this.selectedGrade === 'g11' ? 'active' : ''}" data-subject="all">
+                    <span>✨ 全部科目</span>
+                    <span class="sub-count">3</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'bio_science' && this.selectedGrade === 'g11' ? 'active' : ''}" data-subject="bio_science">
+                    <span>🔬 選修物理 (天體力學/光學)</span>
+                    <span class="sub-count">2</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'math' && this.selectedGrade === 'g11' ? 'active' : ''}" data-subject="math">
+                    <span>🔢 數學 A/B (平面向量)</span>
+                    <span class="sub-count">1</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 高三 -->
+              <div class="curr-grade-card ${this.selectedGrade === 'g12' ? 'active' : ''}" data-grade="g12">
+                <div class="curr-grade-header">
+                  <span class="curr-grade-icon">🎓</span>
+                  <div class="curr-grade-info">
+                    <span class="curr-grade-name">高三 (學測/分科)</span>
+                    <span class="curr-grade-tag">微積分 · 電磁感應大考衝刺</span>
+                  </div>
+                  <span class="curr-chevron">▶</span>
+                </div>
+                <div class="curr-subject-submenu">
+                  <button class="curr-sub-item ${this.selectedSubject === 'all' && this.selectedGrade === 'g12' ? 'active' : ''}" data-subject="all">
+                    <span>✨ 全部科目</span>
+                    <span class="sub-count">3</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'bio_science' && this.selectedGrade === 'g12' ? 'active' : ''}" data-subject="bio_science">
+                    <span>🔬 自然科 (電磁學/遺傳工程)</span>
+                    <span class="sub-count">2</span>
+                  </button>
+                  <button class="curr-sub-item ${this.selectedSubject === 'math' && this.selectedGrade === 'g12' ? 'active' : ''}" data-subject="math">
+                    <span>🔢 數學甲/乙 (微積分導數)</span>
+                    <span class="sub-count">1</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SIDEBAR FOOTER: Matrix Modal Trigger -->
+          <div class="curr-sidebar-footer">
+            <button class="sidebar-matrix-btn" id="open-sidebar-matrix-btn">
+              <span>🔄 跨版本章節對照速查</span>
+              <span class="matrix-pill-tag">康軒 ✕ 翰林 ✕ 南一 橫向對齊</span>
             </button>
           </div>
-        </div>
+        </aside>
 
-        <div class="curriculum-grade-row">
-          <span class="curr-row-label">選擇年級：</span>
-          <div class="grade-pills-wrap">
-            ${data.grades.map(g => `
-              <button class="grade-pill-btn ${g.id === this.selectedGrade ? 'active' : ''}" data-grade="${g.id}">
-                ${g.name}
+        <!-- RIGHT MAIN EXPLORER: Units, Combos & Edition Spotlight -->
+        <main class="curr-main-explorer" id="curr-main-explorer">
+          <!-- Top Breadcrumb & Edition Switcher -->
+          <div class="curr-explorer-topbar">
+            <div class="curr-breadcrumb-box">
+              <span class="curr-crumb-stage" id="crumb-grade-label">國一 (七年級)</span>
+              <span class="curr-crumb-divider">/</span>
+              <span class="curr-crumb-sub" id="crumb-subject-label">✨ 全部科目</span>
+              <span class="curr-crumb-divider">/</span>
+              <span class="curr-crumb-edition" id="crumb-edition-label">🟢 康軒版 (Kangxuan)</span>
+            </div>
+
+            <!-- Edition Tabs -->
+            <div class="curr-edition-tabs">
+              <button class="edition-tab-btn ${this.selectedEdition === 'kangxuan' ? 'active' : ''}" data-edition="kangxuan">
+                <span>🟢</span> 康軒版
               </button>
-            `).join('')}
+              <button class="edition-tab-btn ${this.selectedEdition === 'hanlin' ? 'active' : ''}" data-edition="hanlin">
+                <span>🔵</span> 翰林版
+              </button>
+              <button class="edition-tab-btn ${this.selectedEdition === 'nani' ? 'active' : ''}" data-edition="nani">
+                <span>🟠</span> 南一版
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div class="curriculum-subject-row">
-          <span class="curr-row-label">選擇科目：</span>
-          <div class="subject-pills-wrap">
-            <button class="subject-pill-btn ${this.selectedSubject === 'all' ? 'active' : ''}" data-subject="all">
+          <!-- Subject Quick Tabs for Right Explorer -->
+          <div class="curr-top-subjects-row" id="curr-top-subjects-row">
+            <button class="curr-subject-tab-btn ${this.selectedSubject === 'all' ? 'active' : ''}" data-subject="all">
               ✨ 全部學科
             </button>
-            ${data.subjects.map(s => `
-              <button class="subject-pill-btn ${s.id === this.selectedSubject ? 'active' : ''}" data-subject="${s.id}">
-                ${s.icon} ${s.name}
-              </button>
-            `).join('')}
+            <button class="curr-subject-tab-btn ${this.selectedSubject === 'bio_science' ? 'active' : ''}" data-subject="bio_science">
+              🔬 自然與生物/理化
+            </button>
+            <button class="curr-subject-tab-btn ${this.selectedSubject === 'chinese' ? 'active' : ''}" data-subject="chinese">
+              ✍️ 國語文
+            </button>
+            <button class="curr-subject-tab-btn ${this.selectedSubject === 'math' ? 'active' : ''}" data-subject="math">
+              🔢 數學邏輯
+            </button>
+            <button class="curr-subject-tab-btn ${this.selectedSubject === 'english' ? 'active' : ''}" data-subject="english">
+              🌍 英語文
+            </button>
           </div>
-        </div>
 
-        <div class="curriculum-units-row">
-          <span class="curr-row-label">單元速查：</span>
-          <div class="curr-units-wrap" id="curr-units-buttons-container"></div>
-        </div>
+          <!-- Edition Spotlight Banner -->
+          <div class="curr-edition-banner" id="curr-edition-banner">
+            <!-- Dynamic edition highlight banner -->
+          </div>
+
+          <!-- Section Header & Filter Search Input -->
+          <div class="curr-units-header-row">
+            <div class="units-header-left">
+              <h3 class="units-section-title">📖 選擇單元章節（第幾單元）</h3>
+              <span class="units-count-badge" id="units-count-badge">載入中...</span>
+            </div>
+
+            <div class="units-filter-input-wrap">
+              <span class="filter-icon">🔍</span>
+              <input type="text" id="unit-keyword-filter" class="unit-filter-input" placeholder="在當前單元中篩選（例如：1-1、光合作用、細胞...）">
+            </div>
+          </div>
+
+          <!-- Combo Review Packages Section -->
+          <div class="curr-combos-section" id="curr-combos-container"></div>
+
+          <!-- Units Cards Grid Container -->
+          <div class="curr-units-grid" id="curr-units-grid-container"></div>
+        </main>
       </div>
     `;
 
-    // Bind matrix comparison button
-    const matrixBtn = container.querySelector('#open-curriculum-matrix-btn');
+    // Bind Matrix Button
+    const matrixBtn = container.querySelector('#open-sidebar-matrix-btn');
     if (matrixBtn) {
       matrixBtn.addEventListener('click', () => {
         window.soundEngine.playClick();
@@ -158,40 +384,150 @@ class SearchEngine {
       });
     }
 
-    // Bind edition buttons
-    container.querySelectorAll('.edition-toggle-btn').forEach(btn => {
+    // Bind Grade Cards (Left Sidebar)
+    container.querySelectorAll('.curr-grade-card').forEach(card => {
+      const header = card.querySelector('.curr-grade-header');
+      if (header) {
+        header.addEventListener('click', () => {
+          const gradeId = card.dataset.grade;
+          this.selectedGrade = gradeId;
+          window.soundEngine.playClick();
+
+          // Update active grade styling in sidebar
+          container.querySelectorAll('.curr-grade-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+
+          this.updateCurriculumView();
+        });
+      }
+    });
+
+    // Bind Sidebar Subject Submenu Items
+    container.querySelectorAll('.curr-sub-item').forEach(subBtn => {
+      subBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const parentCard = subBtn.closest('.curr-grade-card');
+        if (parentCard) {
+          const gradeId = parentCard.dataset.grade;
+          this.selectedGrade = gradeId;
+          container.querySelectorAll('.curr-grade-card').forEach(c => c.classList.remove('active'));
+          parentCard.classList.add('active');
+        }
+
+        this.selectedSubject = subBtn.dataset.subject;
+        window.soundEngine.playClick();
+        this.updateCurriculumView();
+      });
+    });
+
+    // Bind Topbar Subject Tab Buttons
+    container.querySelectorAll('.curr-subject-tab-btn').forEach(tabBtn => {
+      tabBtn.addEventListener('click', () => {
+        this.selectedSubject = tabBtn.dataset.subject;
+        window.soundEngine.playClick();
+        this.updateCurriculumView();
+      });
+    });
+
+    // Bind Edition Tab Buttons
+    container.querySelectorAll('.edition-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        container.querySelectorAll('.edition-toggle-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
         this.selectedEdition = btn.dataset.edition;
         window.soundEngine.playClick();
-        this.renderUnitsButtons();
+        this.updateCurriculumView();
       });
     });
 
-    // Bind grade buttons
-    container.querySelectorAll('.grade-pill-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        container.querySelectorAll('.grade-pill-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.selectedGrade = btn.dataset.grade;
-        window.soundEngine.playClick();
-        this.renderUnitsButtons();
+    // Bind Unit Keyword Filter Input
+    const filterInput = container.querySelector('#unit-keyword-filter');
+    if (filterInput) {
+      filterInput.addEventListener('input', (e) => {
+        this.unitSearchFilter = e.target.value.trim().toLowerCase();
+        this.renderUnitsCards();
       });
+    }
+
+    // Initial render of view
+    this.updateCurriculumView();
+  }
+
+  // Update Breadcrumbs, Edition Highlights, Active Badges and Unit Cards
+  updateCurriculumView() {
+    const container = document.getElementById('curriculum-quick-navigator');
+    if (!container || !window.CURRICULUM_DATA) return;
+
+    const data = window.CURRICULUM_DATA;
+
+    // 1. Grade Label
+    const gradeObj = data.grades.find(g => g.id === this.selectedGrade) || { name: '國一 (七年級)' };
+    const gradeLabelEl = document.getElementById('crumb-grade-label');
+    if (gradeLabelEl) gradeLabelEl.textContent = gradeObj.name;
+
+    // 2. Subject Label
+    const subjectNames = {
+      'all': '✨ 全部學科',
+      'bio_science': '🔬 自然與生物/理化',
+      'chinese': '✍️ 國語文',
+      'math': '🔢 數學邏輯',
+      'english': '🌍 英語文'
+    };
+    const subjectLabelEl = document.getElementById('crumb-subject-label');
+    if (subjectLabelEl) subjectLabelEl.textContent = subjectNames[this.selectedSubject] || '✨ 全部學科';
+
+    // 3. Edition Label & Active Tab
+    const editionObj = data.editions.find(e => e.id === this.selectedEdition) || data.editions[0];
+    const editionLabelEl = document.getElementById('crumb-edition-label');
+    if (editionLabelEl) editionLabelEl.textContent = `${editionObj.icon} ${editionObj.name}`;
+
+    container.querySelectorAll('.edition-tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.edition === this.selectedEdition);
     });
 
-    // Bind subject buttons
-    container.querySelectorAll('.subject-pill-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        container.querySelectorAll('.subject-pill-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.selectedSubject = btn.dataset.subject;
-        window.soundEngine.playClick();
-        this.renderUnitsButtons();
-      });
+    // 4. Update Sidebar & Topbar Active States
+    container.querySelectorAll('.curr-grade-card').forEach(card => {
+      card.classList.toggle('active', card.dataset.grade === this.selectedGrade);
     });
 
-    this.renderUnitsButtons();
+    container.querySelectorAll('.curr-sub-item').forEach(btn => {
+      const card = btn.closest('.curr-grade-card');
+      const isParentGrade = card && card.dataset.grade === this.selectedGrade;
+      btn.classList.toggle('active', isParentGrade && btn.dataset.subject === this.selectedSubject);
+    });
+
+    container.querySelectorAll('.curr-subject-tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.subject === this.selectedSubject);
+    });
+
+    // 5. Update Edition Spotlight Banner
+    const bannerEl = document.getElementById('curr-edition-banner');
+    if (bannerEl) {
+      if (this.selectedEdition === 'hanlin') {
+        bannerEl.innerHTML = `
+          <div>
+            <strong>🔵 翰林版課綱核心亮點：</strong>
+            國一生物獨創「1-2 生物圈的範圍」獨立成節；光合作用為 <strong>3-3</strong>（3-2 為人體養分）；國文選文收錄楊喚《夏夜》與陳列《吃冰的滋味》！
+          </div>
+        `;
+      } else if (this.selectedEdition === 'nani') {
+        bannerEl.innerHTML = `
+          <div>
+            <strong>🟠 南一版課綱核心亮點：</strong>
+            國一生物 1-1 統稱為「探索生命」；光合作用為 <strong>3-2</strong>；國文第一課為林良《做一隻光彩的螢火蟲》、沈復《兒時記趣》為第二課！
+          </div>
+        `;
+      } else {
+        bannerEl.innerHTML = `
+          <div>
+            <strong>🟢 康軒版課綱核心亮點：</strong>
+            章節循序漸進，國一生物 1-1 起源與生命四大現象整合，光合作用為 <strong>3-2</strong>（植物如何製造養分）；國文第一課為宋晶宜《雅量》！
+          </div>
+        `;
+      }
+    }
+
+    // 6. Render Combos & Unit Cards
+    this.renderComboCards();
+    this.renderUnitsCards();
   }
 
   // Master Combo Configurations with Explicit Subjects
@@ -520,76 +856,208 @@ class SearchEngine {
     return all.find(c => c.id === mappedId) || all[0];
   }
 
-  renderUnitsButtons() {
-    const container = document.getElementById('curr-units-buttons-container');
-    if (!container || !window.CURRICULUM_DATA) return;
+  renderComboCards() {
+    const container = document.getElementById('curr-combos-container');
+    if (!container) return;
 
-    // Filter units by selected grade, edition & subject
-    const units = window.CURRICULUM_DATA.units.filter(u => {
-      const matchGrade = u.gradeId === this.selectedGrade;
-      const matchEdition = u.editions.includes(this.selectedEdition);
-      const matchSubject = this.selectedSubject === 'all' || u.subjectId === this.selectedSubject;
-      return matchGrade && matchEdition && matchSubject;
-    });
-
-    // Subject metadata mapping
-    const subjectMetaMap = {
-      'bio_science': { label: '自然/生物', icon: '🔬', color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)' },
-      'chinese': { label: '國文', icon: '✍️', color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)' },
-      'math': { label: '數學', icon: '🔢', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.15)' },
-      'english': { label: '英文', icon: '🌍', color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.15)' }
-    };
-
-    // Filter active combos for this grade & subject
     const allCombos = this.getAllComboConfigs();
     const activeCombos = allCombos.filter(c => {
-      const matchGrade = c.gradeId === this.selectedGrade;
+      const matchGrade = (c.gradeId === this.selectedGrade) ||
+        (this.selectedGrade === 'senior' && c.gradeId === 'senior') ||
+        (['g10', 'g11', 'g12'].includes(this.selectedGrade) && c.gradeId === 'senior');
       const matchSubject = this.selectedSubject === 'all' || c.subjectId === this.selectedSubject;
       return matchGrade && matchSubject;
     });
 
-    if (units.length === 0 && activeCombos.length === 0) {
-      container.innerHTML = `<span style="color:var(--text-muted); font-size:0.85rem;">此科目或單元正持續擴充建置中，您可透過上方搜尋框直接輸入教材關鍵字！</span>`;
+    if (activeCombos.length === 0) {
+      container.innerHTML = '';
+      container.style.display = 'none';
       return;
     }
 
-    const unitsHtml = units.map(u => {
-      const sm = subjectMetaMap[u.subjectId] || { label: '學科', icon: '📚', color: '#6366f1', bg: 'rgba(99, 102, 241, 0.15)' };
-      return `
-        <button class="unit-chip-btn" data-unit-id="${u.id}" data-quiz-id="${u.quizPaperId || ''}">
-          <span class="unit-subject-badge" style="color: ${sm.color}; background: ${sm.bg}; border: 1px solid ${sm.color}40;">
-            ${sm.icon} ${sm.label}
-          </span>
-          <span class="unit-code-badge">${u.unitCode}</span>
-          <span class="unit-name-text">${u.unitName}</span>
-        </button>
-      `;
-    }).join('');
-
-    const combosHtml = activeCombos.map(c => `
-      <button class="unit-chip-btn special-combo" data-unit-combo="${c.id}">
-        ${c.label}
+    container.style.display = 'flex';
+    container.innerHTML = activeCombos.map(c => `
+      <button class="special-combo-card" data-unit-combo="${c.id}">
+        <span class="combo-icon">${c.subjectIcon || '⚡'}</span>
+        <span class="combo-label">${c.label}</span>
       </button>
     `).join('');
 
-    container.innerHTML = combosHtml + unitsHtml;
-
-    container.querySelectorAll('.unit-chip-btn').forEach(btn => {
+    container.querySelectorAll('.special-combo-card').forEach(btn => {
       btn.addEventListener('click', () => {
         window.soundEngine.playClick();
         const combo = btn.dataset.unitCombo;
         if (combo) {
           this.activateUnitComboReview(combo);
-          return;
-        }
-
-        const unitId = btn.dataset.unitId;
-        const unit = window.CURRICULUM_DATA.units.find(u => u.id === unitId);
-        if (unit) {
-          this.activateUnitReview(unit);
         }
       });
     });
+  }
+
+  renderUnitsCards() {
+    const grid = document.getElementById('curr-units-grid-container');
+    const countBadge = document.getElementById('units-count-badge');
+    if (!grid || !window.CURRICULUM_DATA) return;
+
+    // Filter units by grade, edition, subject, and search filter
+    const units = window.CURRICULUM_DATA.units.filter(u => {
+      // 1. Grade match
+      let matchGrade = false;
+      if (this.selectedGrade === 'senior') {
+        matchGrade = ['senior', 'g10', 'g11', 'g12'].includes(u.gradeId);
+      } else if (['g10', 'g11', 'g12'].includes(this.selectedGrade)) {
+        matchGrade = (u.gradeId === this.selectedGrade) || (u.gradeId === 'senior');
+      } else {
+        matchGrade = u.gradeId === this.selectedGrade;
+      }
+
+      // 2. Edition match
+      const matchEdition = Array.isArray(u.editions) ? u.editions.includes(this.selectedEdition) : true;
+
+      // 3. Subject match
+      const matchSubject = this.selectedSubject === 'all' || u.subjectId === this.selectedSubject;
+
+      // 4. Keyword search filter
+      let matchSearch = true;
+      if (this.unitSearchFilter) {
+        const q = this.unitSearchFilter.toLowerCase();
+        const title = (u.unitName || '').toLowerCase();
+        const code = (u.unitCode || '').toLowerCase();
+        const desc = (u.description || '').toLowerCase();
+        const notes = (u.editionNotes || '').toLowerCase();
+        const term = (u.term || '').toLowerCase();
+        const kws = Array.isArray(u.searchKeywords) ? u.searchKeywords.join(' ').toLowerCase() : '';
+        const pts = Array.isArray(u.keyPoints) ? u.keyPoints.join(' ').toLowerCase() : '';
+        matchSearch = title.includes(q) || code.includes(q) || desc.includes(q) || notes.includes(q) || term.includes(q) || kws.includes(q) || pts.includes(q);
+      }
+
+      return matchGrade && matchEdition && matchSubject && matchSearch;
+    });
+
+    if (countBadge) {
+      countBadge.textContent = `共 ${units.length} 個單元`;
+    }
+
+    if (units.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem; background: var(--bg-surface-elevated); border: 1px dashed var(--border-subtle); border-radius: var(--radius-lg); color: var(--text-muted);">
+          <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">🔍</div>
+          <h4 style="color: var(--text-main); margin-bottom: 0.5rem; font-size: 1.05rem;">未找到符合條件的單元章節</h4>
+          <p style="font-size: 0.85rem; max-width: 480px; margin: 0 auto;">請嘗試更換學科分類、版本（康軒/翰林/南一），或清除篩選關鍵字。</p>
+        </div>
+      `;
+      return;
+    }
+
+    const subjectMetaMap = {
+      'bio_science': { label: '自然/理化', icon: '🔬', color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)' },
+      'chinese': { label: '國文', icon: '✍️', color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)' },
+      'math': { label: '數學', icon: '🔢', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.15)' },
+      'english': { label: '英文', icon: '🌍', color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.15)' }
+    };
+
+    grid.innerHTML = units.map(u => {
+      const sm = subjectMetaMap[u.subjectId] || { label: '學科', icon: '📚', color: '#6366f1', bg: 'rgba(99, 102, 241, 0.15)' };
+      const bulletItems = (u.keyPoints || []).slice(0, 3).map(pt => `
+        <li class="unit-bullet-item">
+          <span class="unit-bullet-dot">▸</span>
+          <span>${pt}</span>
+        </li>
+      `).join('');
+
+      return `
+        <div class="unit-card-item" data-unit-id="${u.id}">
+          <div class="unit-card-top">
+            <span class="unit-code-pill">${u.unitCode || '單元'}</span>
+            <div class="unit-meta-badges">
+              <span class="unit-subject-badge" style="color: ${sm.color}; background: ${sm.bg}; border: 1px solid ${sm.color}40;">
+                ${sm.icon} ${sm.label}
+              </span>
+              <span class="unit-term-badge">${u.term || ''}</span>
+            </div>
+          </div>
+
+          <h4 class="unit-card-title">${u.unitName}</h4>
+
+          ${u.editionNotes ? `
+            <div class="unit-edition-spotlight">
+              ${u.editionNotes}
+            </div>
+          ` : ''}
+
+          <ul class="unit-bullets-list">
+            ${bulletItems}
+          </ul>
+
+          <div class="unit-card-actions">
+            <button class="unit-action-btn read-btn" data-action="read" data-unit-id="${u.id}">
+              📖 進入單元精讀
+            </button>
+            <button class="unit-action-btn quiz-btn" data-action="quiz" data-unit-id="${u.id}" data-quiz-id="${u.quizPaperId || ''}">
+              📝 隨堂專項測驗
+            </button>
+            <button class="unit-action-btn qbi-btn" data-action="qbi" data-unit-id="${u.id}">
+              🐾 呼叫 Q比 考點直出
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Bind Action Buttons
+    grid.querySelectorAll('.unit-card-item').forEach(card => {
+      const unitId = card.dataset.unitId;
+      const unit = window.CURRICULUM_DATA.units.find(u => u.id === unitId);
+      if (!unit) return;
+
+      // 1. Read Button
+      const readBtn = card.querySelector('[data-action="read"]');
+      if (readBtn) {
+        readBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.soundEngine.playClick();
+          this.openCurriculumUnitModal(unit);
+        });
+      }
+
+      // 2. Quiz Button
+      const quizBtn = card.querySelector('[data-action="quiz"]');
+      if (quizBtn) {
+        quizBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.soundEngine.playClick();
+          if (unit.quizPaperId && window.examEngine) {
+            window.examEngine.loadPaperById(unit.quizPaperId, 'practice');
+            if (window.appRouter) window.appRouter.navigateTo('quiz');
+          } else {
+            this.openCurriculumUnitModal(unit);
+          }
+        });
+      }
+
+      // 3. Qbi AI Tutor Button
+      const qbiBtn = card.querySelector('[data-action="qbi"]');
+      if (qbiBtn) {
+        qbiBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.soundEngine.playClick();
+          if (window.aiTutor) {
+            const prompt = `請以生動且條理分明的方式為我解說【${unit.unitCode} ${unit.unitName}】的核心考點與易錯陷阱！`;
+            window.aiTutor.askInstantQuestion(prompt);
+          }
+        });
+      }
+
+      // 4. Click Card Background
+      card.addEventListener('click', () => {
+        window.soundEngine.playClick();
+        this.openCurriculumUnitModal(unit);
+      });
+    });
+  }
+
+  renderUnitsButtons() {
+    this.renderUnitsCards();
   }
 
   // Activate combo review with explicit subject and metadata
@@ -668,6 +1136,9 @@ class SearchEngine {
       'g7': '國一 (七年級)',
       'g8': '國二 (八年級)',
       'g9': '國三 (九年級會考)',
+      'g10': '高一 (十年級核心)',
+      'g11': '高二 (十一年級選修)',
+      'g12': '高三 (十二年級衝刺)',
       'senior': '高中 (學測/分科)'
     };
     const gradeLabel = gradeBadgeMap[unit.gradeId || this.selectedGrade] || '全年級通用';

@@ -6,10 +6,13 @@ window.CURRICULUM_DATA = {
     { id: 'nani', name: '南一版 (Nani)', icon: '🟠', color: '#f97316', desc: '重視素養探究與實作，獨創第一課螢火蟲與兒時記趣前置編排' }
   ],
   grades: [
-    { id: 'g7', name: '國一 (七年級)', level: '國中' },
-    { id: 'g8', name: '國二 (八年級)', level: '國中' },
-    { id: 'g9', name: '國三 (九年級會考)', level: '國中' },
-    { id: 'senior', name: '高中 (學測/分科)', level: '高中' }
+    { id: 'g7', name: '國一 (七年級)', level: '國中', icon: '🌱', badge: '七上・七下', desc: '基礎扎根・國中起點' },
+    { id: 'g8', name: '國二 (八年級)', level: '國中', icon: '🌿', badge: '八上・八下', desc: '幾何理化・關鍵深化' },
+    { id: 'g9', name: '國三 (九年級會考)', level: '國中', icon: '🎯', badge: '會考全冊總複習', desc: '教育會考・大考衝刺' },
+    { id: 'g10', name: '高一 (十年級)', level: '高中', icon: '📘', badge: '必修核心基礎', desc: '核心素養・高中起手式' },
+    { id: 'g11', name: '高二 (十一年級)', level: '高中', icon: '🔬', badge: '文理分流深化', desc: '分流探索・學門進階' },
+    { id: 'g12', name: '高三 (學測/分科)', level: '高中', icon: '🎓', badge: '大學大考特訓', desc: '學測/分科・最終衝刺' },
+    { id: 'senior', name: '高中 (全學程總覽)', level: '高中', icon: '🏛️', badge: '學測跨章全科', desc: '高中學測精選' }
   ],
   subjects: [
     { id: 'bio_science', name: '自然與生物/理化', icon: '🔬' },
@@ -1305,6 +1308,180 @@ window.CURRICULUM_DATA = {
       ],
       searchKeywords: ['英檢', '國中英文', '會考英文'],
       quizPaperId: 'paper-english-gept'
+    },
+
+    // -----------------------------------------------------------------------
+    // 📘 高一 (十年級核心必修)
+    // -----------------------------------------------------------------------
+    {
+      id: 'unit-g10-bio-central-dogma',
+      gradeId: 'g10',
+      subjectId: 'bio_science',
+      editions: ['kangxuan', 'hanlin', 'nani'],
+      unitCode: '1-1',
+      unitName: '分子生物學中心法則：DNA複製、轉錄與轉譯',
+      term: '高一上學期',
+      editionNotes: '🎓 高中必修生物核心：DNA半保留複製、RNA轉錄、三聯體密碼子轉譯合成多肽鏈。',
+      description: 'DNA 雙螺旋結構、半保留複製機制、轉錄生成 mRNA、核糖體轉譯多肽鏈過程。',
+      keyPoints: [
+        '中心法則：DNA ──(轉錄)──> mRNA ──(轉譯)──> 蛋白質。',
+        '鹼基互補配對原則：DNA 雙股 A-T、C-G；轉錄時 A 配對為 RNA 之 U（尿嘧啶）。',
+        '起始密碼子為 AUG（甲硫胺酸），終止密碼子為 UAA、UAG、UGA。'
+      ],
+      searchKeywords: ['高一生物 1-1', '中心法則', 'DNA複製', '轉錄轉譯'],
+      quizPaperId: 'paper-senior-physics-bio'
+    },
+    {
+      id: 'unit-g10-phy-kinematics',
+      gradeId: 'g10',
+      subjectId: 'bio_science',
+      editions: ['kangxuan', 'hanlin', 'nani'],
+      unitCode: '1-2',
+      unitName: '直線運動學與牛頓運動力學基礎',
+      term: '高一上學期',
+      editionNotes: '🎓 高中必修物理關鍵：等加速度運動三大公式、v-t 圖斜率與面積物理意義。',
+      description: '位移、速度、加速度、v-t 圖判讀、等加速度運動三大公式與自由落體。',
+      keyPoints: [
+        'v-t 圖斜率代表加速度 a，線下面積代表位移 s。',
+        '等加速度三大公式：v = v0 + at；s = v0·t + (1/2)at²；v² = v0² + 2as。',
+        '自由落體僅受重力作用，加速度為 g（約 9.8 m/s²），質量不同物體同時落地。'
+      ],
+      searchKeywords: ['高一物理 1-2', '直線運動', '等加速度', '牛頓運動'],
+      quizPaperId: 'paper-g9-cap-science'
+    },
+    {
+      id: 'unit-g10-math-poly',
+      gradeId: 'g10',
+      subjectId: 'math',
+      editions: ['kangxuan', 'hanlin', 'nani'],
+      unitCode: '1-1',
+      unitName: '多項式定理、餘式因式定理與二次函數極值',
+      term: '高一上學期',
+      editionNotes: '🎓 高中必修數學基石：多項式除法原理、餘式定理 f(c) 與配方法求二次函數極值。',
+      description: '多項式四則運算、除法關係式被除式 = 除式×商式 + 餘式、餘式定理、因式定理與配方法。',
+      keyPoints: [
+        '除法原理：f(x) = g(x)·q(x) + r(x)，其中 deg(r) < deg(g) 或 r(x) = 0。',
+        '餘式定理：多項式 f(x) 除以 (x - c) 的餘式恆等於 f(c)。',
+        '因式定理：若 f(c) = 0，則 (x - c) 為 f(x) 的因式。'
+      ],
+      searchKeywords: ['高一數學 1-1', '多項式', '餘式定理', '因式定理'],
+      quizPaperId: 'paper-senior-math-poly'
+    },
+
+    // -----------------------------------------------------------------------
+    // 🔬 高二 (十一年級文理分流)
+    // -----------------------------------------------------------------------
+    {
+      id: 'unit-g11-phy-gravity',
+      gradeId: 'g11',
+      subjectId: 'bio_science',
+      editions: ['kangxuan', 'hanlin', 'nani'],
+      unitCode: '2-1',
+      unitName: '重力、天體力學與克卜勒行星運動三大定律',
+      term: '高二上學期',
+      editionNotes: '🎓 選修物理天體力學：克卜勒軌道定律、等面積速率與週期定律（T²/R³=定值）。',
+      description: '萬有引力定律、克卜勒第一（橢圓軌道）、第二（等面積速率）、第三（週期）定律。',
+      keyPoints: [
+        '克卜勒第一定律：行星繞日軌道為橢圓，太陽位於其中一個焦點。',
+        '克卜勒第二定律：近日點速率最快，遠日點速率最慢，相同時間掃過相同面積。',
+        '克卜勒第三定律：同一中心天體之軌道長軸半徑立方與公轉週期平方比值為定值。'
+      ],
+      searchKeywords: ['高二物理 2-1', '克卜勒定律', '萬有引力', '天體力學'],
+      quizPaperId: 'paper-senior-physics-bio'
+    },
+    {
+      id: 'unit-g11-phy-optics',
+      gradeId: 'g11',
+      subjectId: 'bio_science',
+      editions: ['kangxuan', 'hanlin', 'nani'],
+      unitCode: '2-2',
+      unitName: '幾何光學折射成像與波動干涉繞射現象',
+      term: '高二上學期',
+      editionNotes: '🎓 選修物理光學：斯乃爾折射定律、凸透鏡成像規律與雙狹縫干涉。',
+      description: '光的折射率、全反射臨界角、透鏡成像公式 1/p + 1/q = 1/f 與波動光學基礎。',
+      keyPoints: [
+        '斯乃爾定律：n1·sinθ1 = n2·sinθ2；光由密介質進入疏介質可能產生全反射。',
+        '凸透鏡成像：物在 2f 外成倒立縮小實像；物在 2f 成倒立等大實像；物在 f 內成正立放大虛像。',
+        '楊氏雙狹縫干涉證明光具有波動性，條紋間距 Δy = λL / d。'
+      ],
+      searchKeywords: ['高二物理 2-2', '光學折射', '透鏡成像', '雙狹縫干涉'],
+      quizPaperId: 'paper-g8-phy-optics'
+    },
+    {
+      id: 'unit-g11-math-vector',
+      gradeId: 'g11',
+      subjectId: 'math',
+      editions: ['kangxuan', 'hanlin', 'nani'],
+      unitCode: '2-1',
+      unitName: '平面向量內積幾何、空間坐標與三角比進階',
+      term: '高二上學期',
+      editionNotes: '🎓 數學 A/B 核心：向量加減法、內積公式、正射影與柯西不等式。',
+      description: '平面向量線性組合、內積 a·b = |a||b|cosθ、垂直條件 a·b = 0、正射影長度與空間坐標系。',
+      keyPoints: [
+        '向量內積：a·b = x1x2 + y1y2 = |a||b|cosθ；兩垂直向量內積等於 0。',
+        '柯西不等式：(a1² + a2²)(b1² + b2²) ≥ (a1b1 + a2b2)²，等號成立時成比例。',
+        '正射影公式：a 在 b 上的正射影為 ((a·b) / |b|²) · b。'
+      ],
+      searchKeywords: ['高二數學 2-1', '平面向量', '向量內積', '柯西不等式'],
+      quizPaperId: 'paper-senior-math-poly'
+    },
+
+    // -----------------------------------------------------------------------
+    // 🎓 高三 (十二年級學測/分科大考)
+    // -----------------------------------------------------------------------
+    {
+      id: 'unit-g12-math-calculus',
+      gradeId: 'g12',
+      subjectId: 'math',
+      editions: ['kangxuan', 'hanlin', 'nani'],
+      unitCode: '3-1',
+      unitName: '微積分極限、導數導函數與切線斜率應用',
+      term: '高三上學期',
+      editionNotes: '🎓 高三數學壓軸：數列與函數極限、微分公式、切線方程式與極值判別。',
+      description: '極限定義、導數幾何意義（切線斜率）、多項式函數微分法、一階導數判別單調性與極值。',
+      keyPoints: [
+        '導數定義：f\'(x) = lim_{h->0} [f(x+h) - f(x)] / h，代表切線斜率與瞬間變化率。',
+        '冪次微分法則：(x^n)\' = n·x^(n-1)；常數微分等於 0。',
+        '極值判別法：若 f\'(c) = 0 且兩側由正變負，則 f(c) 為局部極大值。'
+      ],
+      searchKeywords: ['高三數學 3-1', '微積分', '導函數', '切線斜率'],
+      quizPaperId: 'paper-senior-math-poly'
+    },
+    {
+      id: 'unit-g12-phy-electromagnetism',
+      gradeId: 'g12',
+      subjectId: 'bio_science',
+      editions: ['kangxuan', 'hanlin', 'nani'],
+      unitCode: '3-1',
+      unitName: '電磁感應、法拉第定律與電磁波譜大考總複習',
+      term: '學測/分科衝刺',
+      editionNotes: '🎓 分科測驗自然物理：磁通量變化產生感應電動勢、冷次定律抗拒變化。',
+      description: '磁通量 Φ = B·A、法拉第電磁感應定律 ε = -ΔΦ/Δt、冷次定律方向判斷與交流發電機原理。',
+      keyPoints: [
+        '法拉第定律：感應電動勢大小正比於磁通量之時變率 ε = -N(dΦ/dt)。',
+        '冷次定律：感應電流所產生的磁場，恆反抗原磁通量的變化（抗拒改變）。',
+        '電磁波為橫波，電場 E 與磁場 B 互相垂直且皆垂直於行進方向，真空光速 c = 3×10^8 m/s。'
+      ],
+      searchKeywords: ['高三物理 3-1', '電磁感應', '法拉第定律', '冷次定律'],
+      quizPaperId: 'paper-senior-physics-bio'
+    },
+    {
+      id: 'unit-g12-bio-genetics-cap',
+      gradeId: 'g12',
+      subjectId: 'bio_science',
+      editions: ['kangxuan', 'hanlin', 'nani'],
+      unitCode: '3-2',
+      unitName: '現代遺傳工程、生物多樣性與生態保育學測衝刺',
+      term: '學測/分科衝刺',
+      editionNotes: '🎓 學測生物全冊複習：基因重組技術、質體載體、PCR 核酸複製與生態系碳氮循環。',
+      description: '限制酶與 DNA 連接酶、質體重組、PCR 反應三步驟（變性、黏合、延伸）與生物多樣性層次。',
+      keyPoints: [
+        '基因重組三工具：限制酶（分子剪刀）、DNA 連接酶（分子膠水）、質體（運載工具）。',
+        'PCR 聚合酶連鎖反應三步驟：95°C 變性雙股分開 → 55°C 引子黏合 → 72°C Taq 聚合酶延伸。',
+        '生物多樣性三大層次：遺傳多樣性、物種多樣性、生態系多樣性。'
+      ],
+      searchKeywords: ['高三生物 3-2', '遺傳工程', 'PCR', '生物多樣性'],
+      quizPaperId: 'paper-senior-physics-bio'
     }
   ]
 };
